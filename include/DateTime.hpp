@@ -3,16 +3,18 @@
 
 #include "TimeSpan.hpp"
 
-constexpr int64_t MinTickCount = 0LL;
-constexpr int64_t MaxTickCount = 3155378975999999999LL;
-
-constexpr int64_t SafeTicks(int64_t ticks)
+namespace Kelly
 {
-    return Bound(ticks, MinTickCount, MaxTickCount);
-}
+    constexpr int64_t MinTickCount = 0LL;
+    constexpr int64_t MaxTickCount = 3155378975999999999LL;
 
-class DateTime
-{
+    constexpr int64_t SafeTicks(int64_t ticks)
+    {
+        return Bound(ticks, MinTickCount, MaxTickCount);
+    }
+
+    class DateTime
+    {
     public:
         constexpr DateTime() : _ticks(0) {}
         explicit constexpr DateTime(int64_t ticks) : _ticks(SafeTicks(ticks)) {}
@@ -153,32 +155,33 @@ class DateTime
 
     private:
         int64_t _ticks;
-};
+    };
 
-template<typename CharT, typename TraitsT>
-std::basic_ostream<CharT, TraitsT>& operator<<(
-    std::basic_ostream<CharT, TraitsT>& stream,
-    const DateTime& dateTime)
-{
-    stream
-        << dateTime.Year()
-        << '-'
-        << dateTime.Month()
-        << '-'
-        << dateTime.Day()
-        << ' ';
+    template<typename CharT, typename TraitsT>
+    std::basic_ostream<CharT, TraitsT>& operator<<(
+        std::basic_ostream<CharT, TraitsT>& stream,
+        const DateTime& dateTime)
+    {
+        stream
+            << dateTime.Year()
+            << '-'
+            << dateTime.Month()
+            << '-'
+            << dateTime.Day()
+            << ' ';
 
-    stream << dateTime.Hour() << ':';
+        stream << dateTime.Hour() << ':';
 
-    int minute = dateTime.Minute();
-    if (minute < 10) stream << '0';
-    stream << minute << ':';
+        int minute = dateTime.Minute();
+        if (minute < 10) stream << '0';
+        stream << minute << ':';
 
-    int second = dateTime.Second();
-    if (second < 10) stream << '0';
-    stream << second;
+        int second = dateTime.Second();
+        if (second < 10) stream << '0';
+        stream << second;
 
-    return stream;
+        return stream;
+    }
 }
 
 #endif

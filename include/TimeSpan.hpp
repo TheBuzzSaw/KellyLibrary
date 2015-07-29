@@ -3,43 +3,22 @@
 
 #include <cstdint>
 #include <iostream>
+#include "Math.hpp"
 
-template<typename T>
-constexpr T Min(const T& a, const T& b)
+namespace Kelly
 {
-    return b < a ? b : a;
-}
+    constexpr int64_t LowestValue = int64_t(1) << 63;
+    constexpr int64_t NanosecondsPerTick = 100;
+    constexpr int64_t TicksPerMicrosecond = 10;
+    constexpr int64_t TicksPerMillisecond = TicksPerMicrosecond * 1000;
+    constexpr int64_t TicksPerSecond = TicksPerMillisecond * 1000;
+    constexpr int64_t TicksPerMinute = TicksPerSecond * 60;
+    constexpr int64_t TicksPerHour = TicksPerMinute * 60;
+    constexpr int64_t TicksPerDay = TicksPerHour * 24;
+    constexpr int64_t TicksPerWeek = TicksPerDay * 7;
 
-template<typename T>
-constexpr T Max(const T& a, const T& b)
-{
-    return a < b ? b : a;
-}
-
-template<typename T>
-constexpr T Bound(const T& value, const T& low, const T& high)
-{
-    return Min(Max(value, low), high);
-}
-
-template<typename T>
-constexpr bool InRange(const T& value, const T& low, const T& high)
-{
-    return low <= value && value <= high;
-}
-
-constexpr int64_t LowestValue = int64_t(1) << 63;
-constexpr int64_t NanosecondsPerTick = 100;
-constexpr int64_t TicksPerMicrosecond = 10;
-constexpr int64_t TicksPerMillisecond = TicksPerMicrosecond * 1000;
-constexpr int64_t TicksPerSecond = TicksPerMillisecond * 1000;
-constexpr int64_t TicksPerMinute = TicksPerSecond * 60;
-constexpr int64_t TicksPerHour = TicksPerMinute * 60;
-constexpr int64_t TicksPerDay = TicksPerHour * 24;
-constexpr int64_t TicksPerWeek = TicksPerDay * 7;
-
-class TimeSpan
-{
+    class TimeSpan
+    {
     public:
         constexpr TimeSpan() : _ticks(0) {}
         explicit constexpr TimeSpan(int64_t ticks) : _ticks(ticks) {}
@@ -195,35 +174,36 @@ class TimeSpan
 
     private:
         int64_t _ticks;
-};
+    };
 
-template<typename CharT, typename TraitsT>
-std::basic_ostream<CharT, TraitsT>& operator<<(
-    std::basic_ostream<CharT, TraitsT>& stream,
-    const TimeSpan& timeSpan)
-{
-    int64_t count = timeSpan.ToWeeks();
-    stream << count << 'w';
+    template<typename CharT, typename TraitsT>
+    std::basic_ostream<CharT, TraitsT>& operator<<(
+        std::basic_ostream<CharT, TraitsT>& stream,
+        const TimeSpan& timeSpan)
+    {
+        int64_t count = timeSpan.ToWeeks();
+        stream << count << 'w';
 
-    count = timeSpan.ToDays() - timeSpan.ToWeeks() * 7;
-    stream << count << 'd';
+        count = timeSpan.ToDays() - timeSpan.ToWeeks() * 7;
+        stream << count << 'd';
 
-    count = timeSpan.ToHours() - timeSpan.ToDays() * 24;
-    stream << count << 'h';
+        count = timeSpan.ToHours() - timeSpan.ToDays() * 24;
+        stream << count << 'h';
 
-    count = timeSpan.ToMinutes() - timeSpan.ToHours() * 60;
-    stream << count << 'm';
+        count = timeSpan.ToMinutes() - timeSpan.ToHours() * 60;
+        stream << count << 'm';
 
-    count = timeSpan.ToSeconds() - timeSpan.ToMinutes() * 60;
-    stream << count << 's';
+        count = timeSpan.ToSeconds() - timeSpan.ToMinutes() * 60;
+        stream << count << 's';
 
-    count = timeSpan.ToMilliseconds() - timeSpan.ToSeconds() * 1000;
-    stream << count << "ms";
+        count = timeSpan.ToMilliseconds() - timeSpan.ToSeconds() * 1000;
+        stream << count << "ms";
 
-    count = timeSpan.ToMicroseconds() - timeSpan.ToMilliseconds() * 1000;
-    stream << count << "us";
+        count = timeSpan.ToMicroseconds() - timeSpan.ToMilliseconds() * 1000;
+        stream << count << "us";
 
-    return stream;
+        return stream;
+    }
 }
 
 #endif

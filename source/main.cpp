@@ -1,12 +1,8 @@
-#include "../include/DateTime.hpp"
-
+#include "../include/Clock.hpp"
+#include "../include/Rotation.hpp"
 #include <iostream>
 using namespace std;
-
-void Sleep(const TimeSpan timeSpan);
-const DateTime GetNativeTime();
-void ResetTimer();
-const TimeSpan ReadTimer();
+using namespace Kelly;
 
 void TestDateTimeStuff()
 {
@@ -41,6 +37,10 @@ void TestDateTimeStuff()
 
 int main(int argc, char** argv)
 {
-    TestDateTimeStuff();
+    Rotation64 r = Rotation64::FromDegrees(22.5);
+    cout << r.ToDegrees() << endl;
+    cout << Pi<double>() << endl;
+
+    //TestDateTimeStuff();
     return 0;
 }
