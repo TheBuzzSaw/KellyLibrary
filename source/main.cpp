@@ -1,3 +1,5 @@
+#include "../include/Stopwatch.hpp"
+#include "../include/DateTime.hpp"
 #include "../include/Clock.hpp"
 #include "../include/Rotation.hpp"
 #include <iostream>
@@ -37,9 +39,19 @@ void TestDateTimeStuff()
 
 int main(int argc, char** argv)
 {
+    Stopwatch sw;
+    sw.Start();
     Rotation64 r = Rotation64::FromDegrees(22.5);
     cout << r.ToDegrees() << endl;
     cout << Pi<double>() << endl;
+
+    Sleep(TimeSpan::FromSeconds(3));
+
+    cout << sw.Elapsed() << endl;
+
+    sw.Stop();
+
+    cout << sw.Elapsed() << endl;
 
     //TestDateTimeStuff();
     return 0;

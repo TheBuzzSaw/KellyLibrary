@@ -36,9 +36,11 @@
 		<Unit filename="../include/DateTime.hpp" />
 		<Unit filename="../include/Math.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
+		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />
 		<Unit filename="../source/DateTime.cpp" />
 		<Unit filename="../source/Linux/Clock.cpp" />
+		<Unit filename="../source/Stopwatch.cpp" />
 		<Unit filename="../source/TimeSpan.cpp" />
 		<Unit filename="../source/UNIX/Clock.cpp" />
 		<Unit filename="../source/main.cpp" />
