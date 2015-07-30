@@ -1,3 +1,4 @@
+#include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
 #include "../include/DateTime.hpp"
 #include "../include/Clock.hpp"
@@ -80,8 +81,16 @@ void TestDateTimeStuff()
     cout << ReadTimer() << endl;
 }
 
+void TestView()
+{
+    View<const char> text = { "GREETINGS", 5 };
+
+    for (auto i : text) cout << i;
+    cout << endl;
+}
+
 int main(int argc, char** argv)
 {
-    TestThings();
+    TestView();
     return 0;
 }

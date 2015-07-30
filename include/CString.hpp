@@ -49,7 +49,9 @@ namespace Kelly
     bool operator<=(const CString& a, const CString& b);
     bool operator>=(const CString& a, const CString& b);
 
-    inline std::ostream& operator<<(std::ostream& stream, const CString& cstring)
+    inline std::ostream& operator<<(
+        std::ostream& stream,
+        const CString& cstring)
     {
         if (cstring.value) stream << cstring.value;
         return stream;
