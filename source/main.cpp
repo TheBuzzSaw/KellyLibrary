@@ -83,7 +83,9 @@ void TestDateTimeStuff()
 
 void TestView()
 {
-    View<const char> text = { "GREETINGS", 5 };
+    char buffer[] = "GREETINGS";
+    const View<char> text = { buffer, 5 };
+    text.data[0] = 'g';
 
     for (auto i : text) cout << i;
     cout << endl;
