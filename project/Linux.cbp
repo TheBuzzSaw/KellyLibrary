@@ -32,12 +32,14 @@
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../include/CString.hpp" />
 		<Unit filename="../include/Clock.hpp" />
 		<Unit filename="../include/DateTime.hpp" />
 		<Unit filename="../include/Math.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
 		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />
+		<Unit filename="../source/CString.cpp" />
 		<Unit filename="../source/DateTime.cpp" />
 		<Unit filename="../source/Linux/Clock.cpp" />
 		<Unit filename="../source/Stopwatch.cpp" />

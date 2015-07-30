@@ -3,12 +3,22 @@
 
 namespace Kelly
 {
-    template<typename T> constexpr T Min(const T& a, const T& b)
+    template<typename T> constexpr T Pi()
+    {
+        return 3.1415926535897932384626433832795028841971693993751058209749445;
+    }
+
+    template<typename T> constexpr T Tau()
+    {
+        return Pi<T>() * T(2);
+    }
+
+    template<typename T> constexpr const T& Min(const T& a, const T& b)
     {
         return b < a ? b : a;
     }
 
-    template<typename T> constexpr T Max(const T& a, const T& b)
+    template<typename T> constexpr const T& Max(const T& a, const T& b)
     {
         return a < b ? b : a;
     }

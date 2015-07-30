@@ -2,9 +2,52 @@
 #include "../include/DateTime.hpp"
 #include "../include/Clock.hpp"
 #include "../include/Rotation.hpp"
+#include "../include/CString.hpp"
 #include <iostream>
+#include <map>
 using namespace std;
 using namespace Kelly;
+
+void Test(CString cs)
+{
+    if (cs.HasContent())
+        cout << "value: " << cs << endl;
+    else
+        cout << "no value" << endl;
+}
+
+void TestThings()
+{
+    CString n = "SUP";
+    cout << sizeof(ptrdiff_t) << endl;
+    cout << "TEST: " << n << endl;
+    cout << "TEST: " << n + 1 << endl;
+    cout << "char: " << n[1] << endl;
+    cout << "length: " << n.Length() << endl;
+
+    cout << "sizeof bool math: " << sizeof(true - false) << endl;
+
+    Test(nullptr);
+
+    cout << "yes?" << endl;
+
+    map<CString, CString> options;
+
+    string blam = "huzzah";
+
+    options["database"] = "sqlite";
+    options["z-index"] = "7";
+    options["alt"] = "enable";
+    options["wow"];
+    options[blam] = "pi";
+    options[nullptr] = "AAA";
+    options[""] = "BBB";
+
+    for (auto i : options)
+        cout << "option -- {" << i.first << "} : [" << i.second << "]\n";
+
+    cout << "I want the database: " << options["database"] << endl;
+}
 
 void TestDateTimeStuff()
 {
@@ -39,20 +82,6 @@ void TestDateTimeStuff()
 
 int main(int argc, char** argv)
 {
-    Stopwatch sw;
-    sw.Start();
-    Rotation64 r = Rotation64::FromDegrees(22.5);
-    cout << r.ToDegrees() << endl;
-    cout << Pi<double>() << endl;
-
-    Sleep(TimeSpan::FromSeconds(3));
-
-    cout << sw.Elapsed() << endl;
-
-    sw.Stop();
-
-    cout << sw.Elapsed() << endl;
-
-    //TestDateTimeStuff();
+    TestThings();
     return 0;
 }

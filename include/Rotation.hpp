@@ -1,18 +1,10 @@
 #ifndef ROTATION_HPP
 #define ROTATION_HPP
 
+#include "Math.hpp"
+
 namespace Kelly
 {
-    template<typename T> constexpr T Pi()
-    {
-        return 3.1415926535897932384626433832795028841971693993751058209749445;
-    }
-
-    template<typename T> constexpr T Tau()
-    {
-        return Pi<T>() * T(2);
-    }
-
     template<typename T> class Rotation
     {
         T _radians;
