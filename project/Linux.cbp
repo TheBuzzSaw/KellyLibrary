@@ -39,6 +39,7 @@
 		<Unit filename="../include/Rotation.hpp" />
 		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />
+		<Unit filename="../include/Tools.hpp" />
 		<Unit filename="../include/View.hpp" />
 		<Unit filename="../source/CString.cpp" />
 		<Unit filename="../source/DateTime.cpp" />

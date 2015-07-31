@@ -1,3 +1,4 @@
+#include "../include/Tools.hpp"
 #include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
 #include "../include/DateTime.hpp"
@@ -5,6 +6,7 @@
 #include "../include/Rotation.hpp"
 #include "../include/CString.hpp"
 #include <iostream>
+#include <iomanip>
 #include <map>
 using namespace std;
 using namespace Kelly;
@@ -89,6 +91,18 @@ void TestView()
 
     for (auto i : text) cout << i;
     cout << endl;
+
+    int aa = 0xdeadbeef;
+    auto bb = Get<float>(&aa);
+    cout << aa << " --> " << bb << endl;
+
+    bb = 8.25f;
+    aa = Get<int>(&bb);
+    cout << bb << " --> " << aa << endl;
+
+    cout << hex << aa << " --> " << EndianSwapped(aa) << endl;
+    cout << "Just checking: " << aa << endl;
+    cout << dec;
 }
 
 int main(int argc, char** argv)
