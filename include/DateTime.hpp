@@ -15,9 +15,12 @@ namespace Kelly
 
     class DateTime
     {
+        int64_t _ticks;
+
     public:
         constexpr DateTime() : _ticks(0) {}
-        explicit constexpr DateTime(int64_t ticks) : _ticks(SafeTicks(ticks)) {}
+        explicit constexpr DateTime(int64_t ticks)
+            : _ticks(SafeTicks(ticks)) {}
         DateTime(
             int year,
             int month,
@@ -78,7 +81,7 @@ namespace Kelly
             return DateTime(_ticks - timeSpan.Ticks());
         }
 
-        const TimeSpan operator-(const DateTime& other) const
+        constexpr TimeSpan operator-(const DateTime& other) const
         {
             return TimeSpan(_ticks - other._ticks);
         }
@@ -152,9 +155,6 @@ namespace Kelly
         {
             return DateTime(MaxTickCount);
         }
-
-    private:
-        int64_t _ticks;
     };
 
     template<typename CharT, typename TraitsT>

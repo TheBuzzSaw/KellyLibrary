@@ -19,6 +19,8 @@ namespace Kelly
 
     class TimeSpan
     {
+        int64_t _ticks;
+
     public:
         constexpr TimeSpan() : _ticks(0) {}
         explicit constexpr TimeSpan(int64_t ticks) : _ticks(ticks) {}
@@ -171,9 +173,6 @@ namespace Kelly
         {
             return TimeSpan(~LowestValue);
         }
-
-    private:
-        int64_t _ticks;
     };
 
     template<typename CharT, typename TraitsT>
