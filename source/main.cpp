@@ -113,7 +113,7 @@ void TestView()
 
 void TestNetwork()
 {
-    Endpoint32Query query("google.com", "80");
+    Endpoint32Query query("yahoo.com", "80");
 
     for (auto i : query)
         cout << i << endl;

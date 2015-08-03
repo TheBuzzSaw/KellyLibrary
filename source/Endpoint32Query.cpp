@@ -55,6 +55,18 @@ namespace Kelly
 
     Endpoint32Query::~Endpoint32Query()
     {
-        freeaddrinfo((addrinfo*)_data);
+        if (_data) freeaddrinfo((addrinfo*)_data);
+    }
+
+    Endpoint32Query& Endpoint32Query::operator=(Endpoint32Query&& other)
+    {
+        if (this != &other)
+        {
+            if (_data) freeaddrinfo((addrinfo*)_data);
+            _data = other._data;
+            other._data = nullptr;
+        }
+
+        return *this;
     }
 }
