@@ -13,6 +13,7 @@ namespace Kelly
 
     TcpListener::TcpListener(uint16_t port) : TcpListener()
     {
+        _endpoint.port = port;
         auto attempt = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         if (attempt == -1) return;
 

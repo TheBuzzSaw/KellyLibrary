@@ -12,6 +12,7 @@ namespace Kelly
         uint32_t networkValue;
     };
 
+    constexpr Address32 NullAddress32 = { 0, 0, 0, 0 };
     constexpr Address32 LocalHost32 = { 127, 0, 0, 1 };
 
     template<typename CharT, typename TraitsT>
