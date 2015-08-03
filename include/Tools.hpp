@@ -5,6 +5,8 @@
 
 namespace Kelly
 {
+    constexpr bool HasContent(const char* text) { return text && *text; }
+
     template<typename T> const T& Get(const void* address)
     {
         return *reinterpret_cast<const T*>(address);

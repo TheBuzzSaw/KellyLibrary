@@ -1,4 +1,4 @@
-#include "../include/Network/Endpoint32.hpp"
+#include "../include/Network/Endpoint32Query.hpp"
 #include "../include/Tools.hpp"
 #include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
@@ -113,8 +113,10 @@ void TestView()
 
 void TestNetwork()
 {
-    Endpoint32 endpoint = { { 127, 0, 0, 1 }, 5000 };
-    cout << endpoint << endl;
+    Endpoint32Query query("google.com", "80");
+
+    for (auto i : query)
+        cout << i << endl;
 }
 
 int main(int argc, char** argv)
