@@ -25,9 +25,12 @@ namespace Kelly
 
         void Close();
         bool IsOpen() const;
+        bool SetBlocking(bool blocking);
 
         void Send(const View<const uint8_t>& data);
         ptrdiff_t Receive(const View<uint8_t>& buffer);
+
+        friend class TcpListener;
     };
 }
 

@@ -3,13 +3,12 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <fcntl.h>
 
 namespace Kelly
 {
-    TcpSocket::TcpSocket() : _socket(-1)
+    TcpSocket::TcpSocket() : _socket(-1), _endpoint(NullEndpoint32)
     {
-        _endpoint.address.networkValue = 0;
-        _endpoint.port = 0;
     }
 
     TcpSocket::TcpSocket(const Endpoint32& endpoint)
@@ -37,9 +36,11 @@ namespace Kelly
         }
     }
 
-    TcpSocket::TcpSocket(TcpSocket&& other) : _socket(other._socket)
+    TcpSocket::TcpSocket(TcpSocket&& other)
+        : _socket(other._socket), _endpoint(other._endpoint)
     {
         other._socket = -1;
+        other._endpoint = NullEndpoint32;
     }
 
     TcpSocket::~TcpSocket()
@@ -47,14 +48,37 @@ namespace Kelly
         Close();
     }
 
+    TcpSocket& TcpSocket::operator=(TcpSocket&& other)
+    {
+        if (this != &other)
+        {
+            _socket = other._socket;
+            _endpoint = other._endpoint;
+            other._socket = -1;
+            other._endpoint = NullEndpoint32;
+        }
+
+        return *this;
+    }
+
     void TcpSocket::Close()
     {
-        if (_socket != -1) close(_socket);
+        if (_socket != -1)
+        {
+            close(_socket);
+            _socket = -1;
+        }
     }
 
     bool TcpSocket::IsOpen() const
     {
         return _socket != -1;
+    }
+
+    bool TcpSocket::SetBlocking(bool blocking)
+    {
+        int nonBlocking = 1;
+        return fcntl(_socket, F_SETFL, O_NONBLOCK, nonBlocking) != -1;
     }
 
     void TcpSocket::Send(const View<const uint8_t>& data)

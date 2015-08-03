@@ -1,5 +1,5 @@
 #include "../include/Network/Endpoint32Query.hpp"
-#include "../include/Network/TcpSocket.hpp"
+#include "../include/Network/TcpListener.hpp"
 #include "../include/Tools.hpp"
 #include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
@@ -112,7 +112,7 @@ void TestView()
     cout << dec;
 }
 
-void TestNetwork()
+void TestSocket()
 {
     Endpoint32Query query("yahoo.com", "80");
 
@@ -152,8 +152,56 @@ void TestNetwork()
     cout << endl;
 }
 
+void TestServer()
+{
+    TcpListener listener(8080);
+
+    if (!listener.IsOpen())
+    {
+        cerr << "failed to listen on port " << listener.Endpoint().port << '\n';
+        return;
+    }
+
+    cout << "listening on port " << listener.Endpoint().port << "..." << endl;
+    auto socket = listener.Accept();
+    if (socket.IsOpen())
+    {
+        cout << "connection established from " << socket.Endpoint() << endl;
+
+        char buffer[1024];
+        View<uint8_t> view = { (uint8_t*)buffer, sizeof(buffer) };
+
+        ptrdiff_t n;
+        while ((n = socket.Receive(view)) > 0)
+        {
+            cout.write(buffer, n);
+            socket.SetBlocking(false);
+        }
+
+        auto response =
+            "HTTP/1.1 200 OK\r\n"
+            "Connection: close\r\n"
+            "Content-Type: text/html; charset=UTF-8\r\n"
+            "\r\n"
+            "<html><head><title>XPG Server</title></head>"
+            "<body><p>Hello, World! Text is da bomb.</p></body>"
+            "</html>"
+            ;
+
+        strcpy(buffer, response);
+        view.n = strlen(buffer);
+
+        socket.Send(view);
+    }
+    else
+    {
+        cerr << "failed to accept\n";
+        return;
+    }
+}
+
 int main(int argc, char** argv)
 {
-    TestNetwork();
+    TestServer();
     return 0;
 }
