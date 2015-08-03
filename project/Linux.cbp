@@ -39,6 +39,7 @@
 		<Unit filename="../include/Network/Address32.hpp" />
 		<Unit filename="../include/Network/Endpoint32.hpp" />
 		<Unit filename="../include/Network/Endpoint32Query.hpp" />
+		<Unit filename="../include/Network/TcpConnection.hpp" />
 		<Unit filename="../include/Network/TcpListener.hpp" />
 		<Unit filename="../include/Network/TcpSocket.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
@@ -51,6 +52,7 @@
 		<Unit filename="../source/Endpoint32Query.cpp" />
 		<Unit filename="../source/Linux/Clock.cpp" />
 		<Unit filename="../source/Stopwatch.cpp" />
+		<Unit filename="../source/TcpConnection.cpp" />
 		<Unit filename="../source/TcpListener.cpp" />
 		<Unit filename="../source/TcpSocket.cpp" />
 		<Unit filename="../source/TimeSpan.cpp" />

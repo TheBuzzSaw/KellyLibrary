@@ -11,15 +11,15 @@ namespace Kelly
         int _socket;
         Endpoint32 _endpoint;
 
-    public:
-        TcpSocket();
-        explicit TcpSocket(const Endpoint32& endpoint);
         TcpSocket(const TcpSocket&) = delete;
         TcpSocket(TcpSocket&& other);
-        ~TcpSocket();
 
         TcpSocket& operator=(const TcpSocket&) = delete;
         TcpSocket& operator=(TcpSocket&& other);
+
+    public:
+        TcpSocket();
+        virtual ~TcpSocket();
 
         inline Endpoint32 Endpoint() const { return _endpoint; }
 
@@ -27,10 +27,8 @@ namespace Kelly
         bool IsOpen() const;
         bool SetBlocking(bool blocking);
 
-        void Send(const View<const uint8_t>& data);
-        ptrdiff_t Receive(const View<uint8_t>& buffer);
-
         friend class TcpListener;
+        friend class TcpConnection;
     };
 }
 

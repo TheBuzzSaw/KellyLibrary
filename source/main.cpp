@@ -1,5 +1,6 @@
 #include "../include/Network/Endpoint32Query.hpp"
 #include "../include/Network/TcpListener.hpp"
+#include "../include/Network/TcpConnection.hpp"
 #include "../include/Tools.hpp"
 #include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
@@ -128,7 +129,7 @@ void TestSocket()
     }
     auto endpoint = *ii;
 
-    TcpSocket socket(endpoint);
+    TcpConnection socket(endpoint);
     if (!socket.IsOpen())
     {
         cerr << "failed to open socket\n";
@@ -140,13 +141,13 @@ void TestSocket()
         "Host: www.google.com\r\n"
         "Connection: close\r\n"
         "\r\n";
-    View<uint8_t> view = { (uint8_t*)buffer, sizeof(buffer) };
-    socket.Send(view);
+
+    socket.Send(buffer, sizeof(buffer));
 
     ptrdiff_t n;
-    while ((n = socket.Receive(view)) > 0)
+    while ((n = socket.Receive(buffer, sizeof(buffer))) > 0)
     {
-        cout.write((const char*)view.data, n);
+        cout.write(buffer, n);
     }
 
     cout << endl;
@@ -169,10 +170,9 @@ void TestServer()
         cout << "connection established from " << socket.Endpoint() << endl;
 
         char buffer[1024];
-        View<uint8_t> view = { (uint8_t*)buffer, sizeof(buffer) };
 
         ptrdiff_t n;
-        while ((n = socket.Receive(view)) > 0)
+        while ((n = socket.Receive(buffer, sizeof(buffer))) > 0)
         {
             cout.write(buffer, n);
             socket.SetBlocking(false);
@@ -183,15 +183,15 @@ void TestServer()
             "Connection: close\r\n"
             "Content-Type: text/html; charset=UTF-8\r\n"
             "\r\n"
-            "<html><head><title>XPG Server</title></head>"
+            "<html><head><title>Kelly Server</title></head>"
             "<body><p>Hello, World! Text is da bomb.</p></body>"
             "</html>"
             ;
 
         strcpy(buffer, response);
-        view.n = strlen(buffer);
+        n = strlen(buffer);
 
-        socket.Send(view);
+        socket.Send(buffer, n);
     }
     else
     {

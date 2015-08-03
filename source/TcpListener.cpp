@@ -3,11 +3,10 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
-#include <fcntl.h>
 
 namespace Kelly
 {
-    TcpListener::TcpListener() : _socket(-1), _endpoint(NullEndpoint32)
+    TcpListener::TcpListener() : TcpSocket()
     {
     }
 
@@ -43,53 +42,22 @@ namespace Kelly
     }
 
     TcpListener::TcpListener(TcpListener&& other)
-        : _socket(other._socket), _endpoint(other._endpoint)
+        : TcpSocket(std::move(other))
     {
-        other._socket = -1;
-        other._endpoint = NullEndpoint32;
     }
 
     TcpListener::~TcpListener()
     {
-        Close();
     }
 
     TcpListener& TcpListener::operator=(TcpListener&& other)
     {
-        if (this != &other)
-        {
-            _socket = other._socket;
-            _endpoint = other._endpoint;
-            other._socket = -1;
-            other._endpoint = NullEndpoint32;
-        }
-
-        return *this;
+        return (TcpListener&)TcpSocket::operator=(std::move(other));
     }
 
-    void TcpListener::Close()
+    TcpConnection TcpListener::Accept() const
     {
-        if (_socket != -1)
-        {
-            close(_socket);
-            _socket = -1;
-        }
-    }
-
-    bool TcpListener::IsOpen() const
-    {
-        return _socket != -1;
-    }
-
-    bool TcpListener::SetBlocking(bool blocking)
-    {
-        int nonBlocking = !blocking;
-        return fcntl(_socket, F_SETFL, O_NONBLOCK, nonBlocking) != -1;
-    }
-
-    TcpSocket TcpListener::Accept() const
-    {
-        TcpSocket result;
+        TcpConnection result;
         if (!IsOpen()) return result;
 
         if (listen(_socket, 2)) return result;
