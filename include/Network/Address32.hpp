@@ -12,6 +12,16 @@ namespace Kelly
         uint32_t networkValue;
     };
 
+    constexpr bool operator==(const Address32& a, const Address32& b)
+    {
+        return a.networkValue == b.networkValue;
+    }
+
+    constexpr bool operator!=(const Address32& a, const Address32& b)
+    {
+        return a.networkValue != b.networkValue;
+    }
+
     constexpr Address32 NullAddress32 = { 0, 0, 0, 0 };
     constexpr Address32 LocalHost32 = { 127, 0, 0, 1 };
 

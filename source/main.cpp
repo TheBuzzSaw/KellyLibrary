@@ -121,6 +121,11 @@ void TestSocket()
         cout << i << endl;
 
     auto endpoint = FindEndpoint32("google.com", "80");
+    if (endpoint == NullEndpoint32)
+    {
+        cerr << "failed to locate Google\n";
+        return;
+    }
 
     TcpConnection connection(endpoint);
     if (!connection.IsOpen())

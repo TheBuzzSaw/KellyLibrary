@@ -11,6 +11,16 @@ namespace Kelly
         uint16_t port;
     };
 
+    constexpr bool operator==(const Endpoint32& a, const Endpoint32& b)
+    {
+        return a.address == b.address && a.port == b.port;
+    }
+
+    constexpr bool operator!=(const Endpoint32& a, const Endpoint32& b)
+    {
+        return a.address != b.address || a.port != b.port;
+    }
+
     constexpr Endpoint32 NullEndpoint32 = {{0,0,0,0},0};
 
     template<typename CharT, typename TraitsT>
