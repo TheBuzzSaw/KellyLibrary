@@ -23,14 +23,18 @@ namespace Kelly
         return a < b ? b : a;
     }
 
-    template<typename T>
-    constexpr T Bound(const T& value, const T& low, const T& high)
+    template<typename T> constexpr const T& Bound(
+        const T& value,
+        const T& low,
+        const T& high)
     {
         return Min(Max(value, low), high);
     }
 
-    template<typename T>
-    constexpr bool InRange(const T& value, const T& low, const T& high)
+    template<typename T> constexpr bool InRange(
+        const T& value,
+        const T& low,
+        const T& high)
     {
         return low <= value && value <= high;
     }
