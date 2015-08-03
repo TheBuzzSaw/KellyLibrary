@@ -1,4 +1,5 @@
 #include "../include/Network/Endpoint32Query.hpp"
+#include "../include/Network/TcpSocket.hpp"
 #include "../include/Tools.hpp"
 #include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
@@ -117,6 +118,38 @@ void TestNetwork()
 
     for (auto i : query)
         cout << i << endl;
+
+    query = Endpoint32Query("google.com", "80");
+    auto ii = query.begin();
+    if (ii == query.end())
+    {
+        cerr << "failed to query google.com\n";
+        return;
+    }
+    auto endpoint = *ii;
+
+    TcpSocket socket(endpoint);
+    if (!socket.IsOpen())
+    {
+        cerr << "failed to open socket\n";
+        return;
+    }
+
+    char buffer[] =
+        "GET / HTTP/1.1\r\n"
+        "Host: www.google.com\r\n"
+        "Connection: close\r\n"
+        "\r\n";
+    View<uint8_t> view = { (uint8_t*)buffer, sizeof(buffer) };
+    socket.Send(view);
+
+    ptrdiff_t n;
+    while ((n = socket.Receive(view)) > 0)
+    {
+        cout.write((const char*)view.data, n);
+    }
+
+    cout << endl;
 }
 
 int main(int argc, char** argv)
