@@ -61,6 +61,8 @@ namespace Kelly
             return Endpoint32QueryIterator();
         }
     };
+
+    Endpoint32 FindEndpoint32(const char* address, const char* port);
 }
 
 #endif

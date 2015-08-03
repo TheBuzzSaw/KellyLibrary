@@ -69,4 +69,12 @@ namespace Kelly
 
         return *this;
     }
+
+    Endpoint32 FindEndpoint32(const char* address, const char* port)
+    {
+        auto result = NullEndpoint32;
+        Endpoint32Query query(address, port);
+        if (query.begin() != query.end()) result = *query.begin();
+        return result;
+    }
 }

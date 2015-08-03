@@ -120,17 +120,10 @@ void TestSocket()
     for (auto i : query)
         cout << i << endl;
 
-    query = Endpoint32Query("google.com", "80");
-    auto ii = query.begin();
-    if (ii == query.end())
-    {
-        cerr << "failed to query google.com\n";
-        return;
-    }
-    auto endpoint = *ii;
+    auto endpoint = FindEndpoint32("google.com", "80");
 
-    TcpConnection socket(endpoint);
-    if (!socket.IsOpen())
+    TcpConnection connection(endpoint);
+    if (!connection.IsOpen())
     {
         cerr << "failed to open socket\n";
         return;
@@ -142,10 +135,10 @@ void TestSocket()
         "Connection: close\r\n"
         "\r\n";
 
-    socket.Send(buffer, sizeof(buffer));
+    connection.Send(buffer, sizeof(buffer));
 
     ptrdiff_t n;
-    while ((n = socket.Receive(buffer, sizeof(buffer))) > 0)
+    while ((n = connection.Receive(buffer, sizeof(buffer))) > 0)
     {
         cout.write(buffer, n);
     }
@@ -164,18 +157,18 @@ void TestServer()
     }
 
     cout << "listening on port " << listener.Endpoint().port << "..." << endl;
-    auto socket = listener.Accept();
-    if (socket.IsOpen())
+    auto connection = listener.Accept();
+    if (connection.IsOpen())
     {
-        cout << "connection established from " << socket.Endpoint() << endl;
+        cout << "connection established from " << connection.Endpoint() << endl;
 
         char buffer[1024];
 
         ptrdiff_t n;
-        while ((n = socket.Receive(buffer, sizeof(buffer))) > 0)
+        while ((n = connection.Receive(buffer, sizeof(buffer))) > 0)
         {
             cout.write(buffer, n);
-            socket.SetBlocking(false);
+            connection.SetBlocking(false);
         }
 
         auto response =
@@ -191,7 +184,7 @@ void TestServer()
         strcpy(buffer, response);
         n = strlen(buffer);
 
-        socket.Send(buffer, n);
+        connection.Send(buffer, n);
     }
     else
     {
@@ -202,6 +195,7 @@ void TestServer()
 
 int main(int argc, char** argv)
 {
-    TestServer();
+    //TestServer();
+    TestSocket();
     return 0;
 }
