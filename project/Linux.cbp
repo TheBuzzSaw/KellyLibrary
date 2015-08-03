@@ -36,6 +36,8 @@
 		<Unit filename="../include/Clock.hpp" />
 		<Unit filename="../include/DateTime.hpp" />
 		<Unit filename="../include/Math.hpp" />
+		<Unit filename="../include/Network/Address32.hpp" />
+		<Unit filename="../include/Network/Endpoint32.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
 		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />

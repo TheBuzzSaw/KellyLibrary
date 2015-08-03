@@ -1,3 +1,4 @@
+#include "../include/Network/Endpoint32.hpp"
 #include "../include/Tools.hpp"
 #include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
@@ -110,8 +111,14 @@ void TestView()
     cout << dec;
 }
 
+void TestNetwork()
+{
+    Endpoint32 endpoint = { { 127, 0, 0, 1 }, 5000 };
+    cout << endpoint << endl;
+}
+
 int main(int argc, char** argv)
 {
-    TestView();
+    TestNetwork();
     return 0;
 }
