@@ -200,7 +200,7 @@ void TestServer()
 
 int main(int argc, char** argv)
 {
-    //TestServer();
-    TestSocket();
+    TestServer();
+    //TestSocket();
     return 0;
 }

@@ -31,7 +31,7 @@ namespace Kelly
 
         auto result = bind(attempt, (sockaddr*)&service, sizeof(service));
 
-        if (result == -1)
+        if (result == -1 || listen(attempt, 2) == -1)
         {
             close(attempt);
         }
@@ -60,11 +60,13 @@ namespace Kelly
         TcpConnection result;
         if (!IsOpen()) return result;
 
-        if (listen(_socket, 2)) return result;
-
         sockaddr_in from = {};
         socklen_t fromLen = sizeof(from);
-        result._socket = accept(_socket, (sockaddr*)&from, &fromLen);
+        auto attempt = accept(_socket, (sockaddr*)&from, &fromLen);
+
+        if (attempt == -1) return result;
+
+        result._socket = attempt;
         result._endpoint.address.networkValue = from.sin_addr.s_addr;
         result._endpoint.port = ntohs(from.sin_port);
 

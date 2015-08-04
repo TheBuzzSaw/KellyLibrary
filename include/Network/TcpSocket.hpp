@@ -26,6 +26,7 @@ namespace Kelly
         void Close();
         bool IsOpen() const;
         bool SetBlocking(bool blocking);
+        bool SetDelay(bool delay);
 
         friend class TcpListener;
         friend class TcpConnection;

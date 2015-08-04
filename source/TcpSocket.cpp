@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/tcp.h>
 #include <netdb.h>
 #include <fcntl.h>
 
@@ -52,7 +53,22 @@ namespace Kelly
 
     bool TcpSocket::SetBlocking(bool blocking)
     {
-        int nonBlocking = !blocking;
-        return fcntl(_socket, F_SETFL, O_NONBLOCK, nonBlocking) != -1;
+        if (!IsOpen()) return false;
+        int flag = !blocking;
+        return fcntl(_socket, F_SETFL, O_NONBLOCK, flag) != -1;
+    }
+
+    bool TcpSocket::SetDelay(bool delay)
+    {
+        if (!IsOpen()) return false;
+        int flag = !delay;
+        auto result = setsockopt(
+            _socket,
+            IPPROTO_TCP,
+            TCP_NODELAY,
+            (char*)&flag,
+            sizeof(flag));
+
+        return result >= 0;
     }
 }
