@@ -24,12 +24,12 @@ namespace Kelly
         Endpoint32QueryIterator& operator++();
         Endpoint32QueryIterator operator++(int);
 
-        constexpr bool operator==(const Endpoint32QueryIterator& other)
+        constexpr bool operator==(const Endpoint32QueryIterator& other) const
         {
             return _data == other._data;
         }
 
-        constexpr bool operator!=(const Endpoint32QueryIterator& other)
+        constexpr bool operator!=(const Endpoint32QueryIterator& other) const
         {
             return _data != other._data;
         }
