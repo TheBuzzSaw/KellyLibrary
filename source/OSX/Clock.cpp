@@ -1,12 +1,11 @@
-#include "DateTime.hpp"
+#include "../../include/Clock.hpp"
+#include <unistd.h>
 #include <stdint.h>
 #include <sys/time.h>
 #include <mach/mach_time.h>
 
-void Sleep(const TimeSpan timeSpan)
+namespace Kelly
 {
-    usleep(timeSpan.ToMicroseconds());
-}
 
 const DateTime GetNativeTime()
 {
@@ -34,3 +33,6 @@ const TimeSpan ReadTimer()
     uint64_t nanoseconds = elapsed * timeBaseInfo.numer / timeBaseInfo.denom;
     return TimeSpan::FromNanoseconds(nanoseconds);
 }
+
+}
+
