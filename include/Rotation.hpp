@@ -50,7 +50,7 @@ namespace Kelly
         return Rotation<T>(a) -= b;
     }
 
-    template<typename T> inline Rotation<T> operator-(const Rotation<T>& a)
+    template<typename T> constexpr Rotation<T> operator-(const Rotation<T>& a)
     {
         return Rotation<T>(Tau<T>() - a.ToRadians());
     }

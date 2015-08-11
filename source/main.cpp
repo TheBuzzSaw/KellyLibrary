@@ -198,10 +198,42 @@ void TestServer()
     }
 }
 
+double Linear(double first, double last, double t)
+{
+    auto difference = last - first;
+    return difference * t + first;
+}
+
+double Overshoot(double first, double last, double t)
+{
+    auto difference = last - first;
+    auto magnitude = difference * -0.25;
+    return difference * t + first + sin(t * Tau<double>()) * magnitude;
+}
+
+void TestInterpolation(double first, double last, int stepCount)
+{
+    cout << first << " to " << last << '\n';
+    for (int i = 0; i <= stepCount; ++i)
+    {
+        auto t = double(i) / stepCount;
+
+        cout << t
+            << '\t' << Linear(first, last, t)
+            << '\t' << Overshoot(first, last, t)
+            << '\n';
+    }
+
+    cout << endl;
+}
+
 void TestRotation()
 {
     auto a = Degrees<double>(45 + 360 + 360);
     auto b = Degrees<double>(-10 - 360 - 360);
+    Rotation64 test(ToRadians(113.0));
+
+    cout << test.ToDegrees() << endl;
 
     cout << a.ToDegrees() << endl;
     cout << b.ToDegrees() << endl;
@@ -209,12 +241,21 @@ void TestRotation()
     cout << (-b).ToDegrees() << endl;
     cout << (a + b).ToDegrees() << endl;
     cout << (a - b).ToDegrees() << endl;
+    cout << (a + -b).ToDegrees() << endl;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        auto n = Pi<double>() * i / 4;
+        cout << ToDegrees(n) << " --> " << sin(n) << endl;
+    }
 }
 
 int main(int argc, char** argv)
 {
     //TestServer();
     //TestSocket();
-    TestRotation();
+    //TestRotation();
+    TestInterpolation(0.0, 1.0, 16);
+    TestInterpolation(80.0, 40.0, 16);
     return 0;
 }
