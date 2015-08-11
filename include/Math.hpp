@@ -13,6 +13,16 @@ namespace Kelly
         return Pi<T>() * T(2);
     }
 
+    template<typename T> constexpr T ToDegrees(T radians)
+    {
+        return radians * T(180) / Pi<T>();
+    }
+
+    template<typename T> constexpr T ToRadians(T degrees)
+    {
+        return degrees * Pi<T>() / T(180);
+    }
+
     template<typename T> constexpr const T& Min(const T& a, const T& b)
     {
         return b < a ? b : a;

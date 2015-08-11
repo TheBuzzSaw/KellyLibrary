@@ -198,9 +198,23 @@ void TestServer()
     }
 }
 
+void TestRotation()
+{
+    auto a = Degrees<double>(45 + 360 + 360);
+    auto b = Degrees<double>(-10 - 360 - 360);
+
+    cout << a.ToDegrees() << endl;
+    cout << b.ToDegrees() << endl;
+    cout << (-a).ToDegrees() << endl;
+    cout << (-b).ToDegrees() << endl;
+    cout << (a + b).ToDegrees() << endl;
+    cout << (a - b).ToDegrees() << endl;
+}
+
 int main(int argc, char** argv)
 {
-    TestServer();
+    //TestServer();
     //TestSocket();
+    TestRotation();
     return 0;
 }
