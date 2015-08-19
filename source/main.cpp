@@ -1,6 +1,7 @@
 #include "../include/Network/Endpoint32Query.hpp"
 #include "../include/Network/TcpListener.hpp"
 #include "../include/Network/TcpConnection.hpp"
+#include "../include/DataMap.hpp"
 #include "../include/Tools.hpp"
 #include "../include/View.hpp"
 #include "../include/Stopwatch.hpp"
@@ -198,64 +199,64 @@ void TestServer()
     }
 }
 
-double Linear(double first, double last, double t)
+struct V3
 {
-    auto difference = last - first;
-    return difference * t + first;
-}
+    int x;
+    int y;
+    int z;
+};
 
-double Overshoot(double first, double last, double t)
+void TestMaps()
 {
-    auto difference = last - first;
-    auto magnitude = difference * -0.25;
-    return difference * t + first + sin(t * Tau<double>()) * magnitude;
-}
-
-void TestInterpolation(double first, double last, int stepCount)
-{
-    cout << first << " to " << last << '\n';
-    for (int i = 0; i <= stepCount; ++i)
+    DataMap<int, V3> coordinates;
+    auto report = [&](const char* message)
     {
-        auto t = double(i) / stepCount;
+        cout
+            << message
+            << " : "
+            << coordinates.Count()
+            << " / "
+            << coordinates.Capacity()
+            << endl;
+    };
 
-        cout << t
-            << '\t' << Linear(first, last, t)
-            << '\t' << Overshoot(first, last, t)
-            << '\n';
+    report("before get");
+
+    auto v = coordinates.Get(1234);
+
+    report("after get");
+
+    coordinates.Set(13, {1, 2, 3});
+
+    report("after set");
+
+    v = coordinates.Get(13);
+
+    if (v)
+        cout << "found v: " << v->x << ", " << v->y << ", " << v->z << endl;
+    else
+        cout << "failed to find v" << endl;
+
+    for (int i = 0; i < 43; ++i)
+    {
+        coordinates.Set(i, {i, i + 1, i + 2});
     }
 
-    cout << endl;
-}
-
-void TestRotation()
-{
-    auto a = Degrees<double>(45 + 360 + 360);
-    auto b = Degrees<double>(-10 - 360 - 360);
-    Rotation64 test(ToRadians(113.0));
-
-    cout << test.ToDegrees() << endl;
-
-    cout << a.ToDegrees() << endl;
-    cout << b.ToDegrees() << endl;
-    cout << (-a).ToDegrees() << endl;
-    cout << (-b).ToDegrees() << endl;
-    cout << (a + b).ToDegrees() << endl;
-    cout << (a - b).ToDegrees() << endl;
-    cout << (a + -b).ToDegrees() << endl;
-
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 43; ++i)
     {
-        auto n = Pi<double>() * i / 4;
-        cout << ToDegrees(n) << " --> " << sin(n) << endl;
+        v = coordinates.Get(i);
+
+        if (v)
+            cout << "found " << i << ": " << v->x << ", " << v->y << ", " << v->z << endl;
+        else
+            cout << "failed to find " << i << endl;
     }
+
+    report("after many inserts");
 }
 
 int main(int argc, char** argv)
 {
-    //TestServer();
-    //TestSocket();
-    //TestRotation();
-    TestInterpolation(0.0, 1.0, 16);
-    TestInterpolation(80.0, 40.0, 16);
+    TestMaps();
     return 0;
 }
