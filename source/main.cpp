@@ -255,6 +255,14 @@ void TestMaps()
     }
 
     report("after many inserts");
+
+    for (auto key : coordinates.Keys()) cout << ' ' << key;
+
+    cout << endl;
+
+    for (auto value : coordinates.Values()) cout << ' ' << value.z;
+
+    cout << endl;
 }
 
 void RaceMaps()
@@ -263,7 +271,7 @@ void RaceMaps()
     mt19937_64 mt;
     uniform_int_distribution<int> distribution(-1024, 1024);
 
-    constexpr auto Count = 1e6;
+    constexpr auto Count = 1e7;
     rawCoordinates.reserve(Count);
     for (int i = 0; i < Count; ++i)
     {
@@ -342,6 +350,27 @@ void RaceMaps()
     sw.Stop();
 
     cout << sw.Elapsed() << " to randomly read unordered map: " << n << endl;
+
+    sw.Restart();
+    n = 0;
+    for (auto value : dm.Values()) n ^= value.x;
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to linearly read DataMap: " << n << endl;
+
+    sw.Restart();
+    n = 0;
+    for (auto i : m) n ^= i.second.x;
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to linearly read map: " << n << endl;
+
+    sw.Restart();
+    n = 0;
+    for (auto i : um) n ^= i.second.x;
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to linearly read unordered map: " << n << endl;
 }
 
 int main(int argc, char** argv)

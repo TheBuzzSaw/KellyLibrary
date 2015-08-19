@@ -2,6 +2,7 @@
 #define DATAMAP_HPP_KELLY
 
 #include "Math.hpp"
+#include "View.hpp"
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
@@ -19,10 +20,8 @@ namespace Kelly
         {
             auto proposedCapacity = Max(_capacity * 2, 8);
 
-            auto block = realloc(_block, proposedCapacity * KeyValueSize);
-            assert(block);
-            assert(block != _block);
-            _block = block;
+            _block = realloc(_block, proposedCapacity * KeyValueSize);
+            assert(_block);
 
             memmove(
                 (K*)_block + proposedCapacity,
@@ -93,6 +92,7 @@ namespace Kelly
 
         inline int Capacity() const { return _capacity; }
         inline int Count() const { return _count; }
+        inline void Clear() { _count = 0; }
 
         V* Get(K key)
         {
@@ -133,7 +133,7 @@ namespace Kelly
                     values = (V*)(keys + _capacity);
                 }
 
-                auto moveCount = _count - distance;
+                auto moveCount = _count++ - distance;
                 auto keySlot = keys + distance;
                 memmove(keySlot + 1, keySlot, moveCount * sizeof(K));
                 *keySlot = key;
@@ -141,13 +141,37 @@ namespace Kelly
                 auto valueSlot = values + distance;
                 memmove(valueSlot + 1, valueSlot, moveCount * sizeof(V));
                 *valueSlot = value;
-
-                ++_count;
             }
         }
 
         void Remove(K key)
         {
+            auto keys = (K*)_block;
+            auto lastKey = keys + _count;
+
+            auto k = std::lower_bound(keys, lastKey, key);
+
+            if (k != lastKey && *k == key)
+            {
+                auto values = (V*)(keys + _capacity);
+                auto distance = k - keys;
+                auto moveCount = --_count - distance;
+
+                memmove(k, k + 1, moveCount * sizeof(K));
+
+                auto valueSlot = values + distance;
+                memmove(valueSlot, valueSlot + 1, moveCount * sizeof(V));
+            }
+        }
+
+        View<K> Keys() const
+        {
+            return { (K*)_block, _count };
+        }
+
+        View<V> Values() const
+        {
+            return { (V*)((K*)_block + _capacity), _count };
         }
     };
 }
