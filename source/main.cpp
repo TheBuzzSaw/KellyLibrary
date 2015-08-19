@@ -224,15 +224,16 @@ void TestMaps()
 
     report("before get");
 
-    auto v = coordinates.Get(1234);
+    auto v = coordinates.TryGet(1234);
 
     report("after get");
 
+    coordinates.AlwaysGet(13) = {11, 12, 13};
     coordinates.Set(13, {1, 2, 3});
 
     report("after set");
 
-    v = coordinates.Get(13);
+    v = coordinates.TryGet(13);
 
     if (v)
         cout << "found v: " << v->x << ", " << v->y << ", " << v->z << endl;
@@ -244,17 +245,14 @@ void TestMaps()
         coordinates.Set(i, {i, i + 1, i + 2});
     }
 
-    for (int i = 0; i < 43; ++i)
-    {
-        v = coordinates.Get(i);
-
-        if (v)
-            cout << "found " << i << ": " << v->x << ", " << v->y << ", " << v->z << endl;
-        else
-            cout << "failed to find " << i << endl;
-    }
-
     report("after many inserts");
+
+    if (coordinates.Remove(2)) cout << "removed!" << endl;
+    if (coordinates.Remove(9)) cout << "removed!" << endl;
+    if (coordinates.Remove(9)) cout << "removed!" << endl;
+    if (coordinates.Remove(20)) cout << "removed!" << endl;
+
+    report("after removals");
 
     for (auto key : coordinates.Keys()) cout << ' ' << key;
 
@@ -317,7 +315,7 @@ void RaceMaps()
 
     cout << sw.Elapsed() << " to insert into unordered map" << endl;
 
-    cout << dm.Get(1337)->y << endl;
+    cout << dm.TryGet(1337)->y << endl;
     cout << m[1337].y << endl;
     cout << um[1337].y << endl;
 
@@ -331,7 +329,7 @@ void RaceMaps()
     int n = 0;
     for (auto index : indices)
     {
-        auto check = dm.Get(index);
+        auto check = dm.TryGet(index);
         n ^= check->z;
     }
     sw.Stop();
@@ -376,7 +374,7 @@ void RaceMaps()
 
 int main(int argc, char** argv)
 {
-    //TestMaps();
-    RaceMaps();
+    TestMaps();
+    //RaceMaps();
     return 0;
 }

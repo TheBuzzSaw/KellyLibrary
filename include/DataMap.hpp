@@ -28,7 +28,7 @@ namespace Kelly
             memmove(
                 (K*)_block + proposedCapacity,
                 (K*)_block + _capacity,
-                sizeof(V) * size_t(_count));
+                sizeof(V) * (size_t)_count);
 
             _capacity = proposedCapacity;
         }
@@ -98,7 +98,7 @@ namespace Kelly
         inline int Count() const { return _count; }
         inline void Clear() { _count = 0; }
 
-        V* Get(K key)
+        V* TryGet(K key)
         {
             auto keys = (K*)_block;
             auto endKey = keys + _count;
@@ -113,6 +113,39 @@ namespace Kelly
             }
 
             return nullptr;
+        }
+
+        V& AlwaysGet(K key)
+        {
+            auto keys = (K*)_block;
+            auto values = (V*)(keys + _capacity);
+            auto endKey = keys + _count;
+
+            auto k = std::lower_bound(keys, endKey, key);
+            auto distance = k - keys;
+
+            if (k != endKey && *k == key)
+            {
+                return values[distance];
+            }
+            else
+            {
+                if (_count == _capacity)
+                {
+                    Expand(_capacity * 2);
+                    keys = (K*)_block;
+                    values = (V*)(keys + _capacity);
+                }
+
+                auto moveCount = _count++ - distance;
+                auto keySlot = keys + distance;
+                memmove(keySlot + 1, keySlot, moveCount * sizeof(K));
+                *keySlot = key;
+
+                auto valueSlot = values + distance;
+                memmove(valueSlot + 1, valueSlot, moveCount * sizeof(V));
+                return *valueSlot;
+            }
         }
 
         void Set(K key, V value)
@@ -148,7 +181,7 @@ namespace Kelly
             }
         }
 
-        void Remove(K key)
+        bool Remove(K key)
         {
             auto keys = (K*)_block;
             auto endKey = keys + _count;
@@ -165,7 +198,10 @@ namespace Kelly
 
                 auto valueSlot = values + distance;
                 memmove(valueSlot, valueSlot + 1, moveCount * sizeof(V));
+                return true;
             }
+
+            return false;
         }
 
         void Reserve(int capacity)
