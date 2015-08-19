@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
-#include <iostream>
 
 namespace Kelly
 {
@@ -145,6 +144,10 @@ namespace Kelly
 
                 ++_count;
             }
+        }
+
+        void Remove(K key)
+        {
         }
     };
 }

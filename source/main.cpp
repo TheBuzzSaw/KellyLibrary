@@ -12,6 +12,8 @@
 #include <iostream>
 #include <iomanip>
 #include <map>
+#include <unordered_map>
+#include <random>
 using namespace std;
 using namespace Kelly;
 
@@ -255,8 +257,96 @@ void TestMaps()
     report("after many inserts");
 }
 
+void RaceMaps()
+{
+    vector<V3> rawCoordinates;
+    mt19937_64 mt;
+    uniform_int_distribution<int> distribution(-1024, 1024);
+
+    constexpr auto Count = 1e6;
+    rawCoordinates.reserve(Count);
+    for (int i = 0; i < Count; ++i)
+    {
+        rawCoordinates.push_back(
+            {distribution(mt), distribution(mt), distribution(mt)});
+    }
+
+    DataMap<int, V3> dm;
+    Stopwatch sw;
+    sw.Start();
+
+    for (int i = 0; i < Count; ++i)
+    {
+        dm.Set(i, rawCoordinates[i]);
+    }
+
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to insert into DataMap" << endl;
+
+    map<int, V3> m;
+    sw.Restart();
+
+    for (int i = 0; i < Count; ++i)
+    {
+        m.insert(pair<int, V3>(i, rawCoordinates[i]));
+    }
+
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to insert into map" << endl;
+
+    unordered_map<int, V3> um;
+    sw.Restart();
+
+    for (int i = 0; i < Count; ++i)
+    {
+        um.insert(pair<int, V3>(i, rawCoordinates[i]));
+    }
+
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to insert into unordered map" << endl;
+
+    cout << dm.Get(1337)->y << endl;
+    cout << m[1337].y << endl;
+    cout << um[1337].y << endl;
+
+    distribution = uniform_int_distribution<int>(0, Count - 1);
+    constexpr auto IndexCount = 1e5;
+    vector<int> indices;
+    indices.reserve(IndexCount);
+    for (int i = 0; i < IndexCount; ++i) indices.push_back(distribution(mt));
+
+    sw.Restart();
+    int n = 0;
+    for (auto index : indices)
+    {
+        auto check = dm.Get(index);
+        n ^= check->z;
+    }
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to randomly read DataMap: " << n << endl;
+
+    sw.Restart();
+    n = 0;
+    for (auto index : indices) n ^= m[index].z;
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to randomly read map: " << n << endl;
+
+    sw.Restart();
+    n = 0;
+    for (auto index : indices) n ^= um[index].z;
+    sw.Stop();
+
+    cout << sw.Elapsed() << " to randomly read unordered map: " << n << endl;
+}
+
 int main(int argc, char** argv)
 {
-    TestMaps();
+    //TestMaps();
+    RaceMaps();
     return 0;
 }
