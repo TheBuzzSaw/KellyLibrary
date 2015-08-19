@@ -271,7 +271,7 @@ void RaceMaps()
     mt19937_64 mt;
     uniform_int_distribution<int> distribution(-1024, 1024);
 
-    constexpr auto Count = 1e7;
+    constexpr auto Count = 1e6;
     rawCoordinates.reserve(Count);
     for (int i = 0; i < Count; ++i)
     {
@@ -280,6 +280,7 @@ void RaceMaps()
     }
 
     DataMap<int, V3> dm;
+    //dm.Reserve(Count);
     Stopwatch sw;
     sw.Start();
 

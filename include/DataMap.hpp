@@ -16,9 +16,9 @@ namespace Kelly
         int _capacity;
         int _count;
 
-        void Expand()
+        void Expand(int capacity)
         {
-            auto proposedCapacity = Max(_capacity * 2, 8);
+            auto proposedCapacity = Max(capacity, 8);
 
             _block = realloc(_block, proposedCapacity * KeyValueSize);
             assert(_block);
@@ -128,7 +128,7 @@ namespace Kelly
             {
                 if (_count == _capacity)
                 {
-                    Expand();
+                    Expand(_capacity * 2);
                     keys = (K*)_block;
                     values = (V*)(keys + _capacity);
                 }
@@ -162,6 +162,11 @@ namespace Kelly
                 auto valueSlot = values + distance;
                 memmove(valueSlot, valueSlot + 1, moveCount * sizeof(V));
             }
+        }
+
+        void Reserve(int capacity)
+        {
+            if (capacity > _capacity) Expand(capacity);
         }
 
         View<K> Keys() const
