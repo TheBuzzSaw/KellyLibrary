@@ -12,6 +12,8 @@ namespace Kelly
 {
     template<typename K, typename V> class DataMap
     {
+        static constexpr auto KeyValueSize = sizeof(K) + sizeof(V);
+
         void* _block;
         int _capacity;
         int _count;
@@ -32,8 +34,6 @@ namespace Kelly
         }
 
     public:
-        static constexpr auto KeyValueSize = sizeof(K) + sizeof(V);
-
         DataMap()
             : _block(nullptr)
             , _capacity(0)
@@ -60,6 +60,10 @@ namespace Kelly
                 auto totalSize = (size_t)_capacity * KeyValueSize;
                 _block = malloc(totalSize);
                 memcpy(_block, other._block, totalSize);
+            }
+            else
+            {
+                _block = nullptr;
             }
         }
 
@@ -97,11 +101,11 @@ namespace Kelly
         V* Get(K key)
         {
             auto keys = (K*)_block;
-            auto lastKey = keys + _count;
+            auto endKey = keys + _count;
 
-            auto k = std::lower_bound(keys, lastKey, key);
+            auto k = std::lower_bound(keys, endKey, key);
 
-            if (k != lastKey && *k == key)
+            if (k != endKey && *k == key)
             {
                 auto values = (V*)(keys + _capacity);
                 auto distance = k - keys;
@@ -115,12 +119,12 @@ namespace Kelly
         {
             auto keys = (K*)_block;
             auto values = (V*)(keys + _capacity);
-            auto lastKey = keys + _count;
+            auto endKey = keys + _count;
 
-            auto k = std::lower_bound(keys, lastKey, key);
+            auto k = std::lower_bound(keys, endKey, key);
             auto distance = k - keys;
 
-            if (k != lastKey && *k == key)
+            if (k != endKey && *k == key)
             {
                 values[distance] = value;
             }
@@ -147,11 +151,11 @@ namespace Kelly
         void Remove(K key)
         {
             auto keys = (K*)_block;
-            auto lastKey = keys + _count;
+            auto endKey = keys + _count;
 
-            auto k = std::lower_bound(keys, lastKey, key);
+            auto k = std::lower_bound(keys, endKey, key);
 
-            if (k != lastKey && *k == key)
+            if (k != endKey && *k == key)
             {
                 auto values = (V*)(keys + _capacity);
                 auto distance = k - keys;
