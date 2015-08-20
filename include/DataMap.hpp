@@ -23,7 +23,7 @@ namespace Kelly
             auto proposedCapacity = Max(capacity, 8);
 
             _block = realloc(_block, proposedCapacity * KeyValueSize);
-            assert(_block);
+            assert(_block != nullptr);
 
             memmove(
                 (K*)_block + proposedCapacity,
@@ -34,14 +34,14 @@ namespace Kelly
         }
 
     public:
-        DataMap()
+        DataMap() noexcept
             : _block(nullptr)
             , _capacity(0)
             , _count(0)
         {
         }
 
-        DataMap(DataMap&& other)
+        DataMap(DataMap&& other) noexcept
             : _block(other._block)
             , _capacity(other._capacity)
             , _count(other._count)
@@ -67,12 +67,12 @@ namespace Kelly
             }
         }
 
-        ~DataMap()
+        ~DataMap() noexcept
         {
             free(_block);
         }
 
-        DataMap& operator=(DataMap&& other)
+        DataMap& operator=(DataMap&& other) noexcept
         {
             if (this != &other)
             {
@@ -94,11 +94,11 @@ namespace Kelly
             return *this;
         }
 
-        inline int Capacity() const { return _capacity; }
-        inline int Count() const { return _count; }
-        inline void Clear() { _count = 0; }
+        inline int Capacity() const noexcept { return _capacity; }
+        inline int Count() const noexcept { return _count; }
+        inline void Clear() noexcept { _count = 0; }
 
-        V* TryGet(K key)
+        V* TryGet(K key) noexcept
         {
             auto keys = (K*)_block;
             auto endKey = keys + _count;
@@ -181,7 +181,7 @@ namespace Kelly
             }
         }
 
-        bool Remove(K key)
+        bool Remove(K key) noexcept
         {
             auto keys = (K*)_block;
             auto endKey = keys + _count;
@@ -209,12 +209,22 @@ namespace Kelly
             if (capacity > _capacity) Expand(capacity);
         }
 
-        View<K> Keys() const
+        View<K> Keys() noexcept
         {
             return { (K*)_block, _count };
         }
 
-        View<V> Values() const
+        View<V> Values() noexcept
+        {
+            return { (V*)((K*)_block + _capacity), _count };
+        }
+
+        View<const K> ConstKeys() const noexcept
+        {
+            return { (K*)_block, _count };
+        }
+
+        View<const V> ConstValues() const noexcept
         {
             return { (V*)((K*)_block + _capacity), _count };
         }
