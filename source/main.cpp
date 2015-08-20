@@ -267,9 +267,9 @@ void RaceMaps()
 {
     vector<V3> rawCoordinates;
     mt19937_64 mt;
-    uniform_int_distribution<int> distribution(-1024, 1024);
+    uniform_int_distribution<int> distribution(-1 << 20, 1 << 20);
 
-    constexpr auto Count = 1e6;
+    constexpr auto Count = 4e6;
     rawCoordinates.reserve(Count);
     for (int i = 0; i < Count; ++i)
     {
@@ -352,21 +352,21 @@ void RaceMaps()
 
     sw.Restart();
     n = 0;
-    for (auto value : dm.Values()) n ^= value.x;
+    for (auto& value : dm.Values()) n ^= value.x ^ value.y ^ value.z;
     sw.Stop();
 
     cout << sw.Elapsed() << " to linearly read DataMap: " << n << endl;
 
     sw.Restart();
     n = 0;
-    for (auto i : m) n ^= i.second.x;
+    for (auto& i : m) n ^= i.second.x ^ i.second.y ^ i.second.z;
     sw.Stop();
 
     cout << sw.Elapsed() << " to linearly read map: " << n << endl;
 
     sw.Restart();
     n = 0;
-    for (auto i : um) n ^= i.second.x;
+    for (auto& i : um) n ^= i.second.x ^ i.second.y ^ i.second.z;
     sw.Stop();
 
     cout << sw.Elapsed() << " to linearly read unordered map: " << n << endl;
@@ -374,7 +374,7 @@ void RaceMaps()
 
 int main(int argc, char** argv)
 {
-    TestMaps();
-    //RaceMaps();
+    //TestMaps();
+    RaceMaps();
     return 0;
 }
