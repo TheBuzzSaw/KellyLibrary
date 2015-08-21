@@ -48,6 +48,7 @@
 		<Unit filename="../include/Network/TcpListener.hpp" />
 		<Unit filename="../include/Network/TcpSocket.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
+		<Unit filename="../include/SplitArray.hpp" />
 		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />
 		<Unit filename="../include/Tools.hpp" />
