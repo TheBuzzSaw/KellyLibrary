@@ -2,6 +2,7 @@
 #define VIEW_HPP_KELLY
 
 #include "Math.hpp"
+#include <cstdint>
 #include <cstring>
 #include <cstddef>
 

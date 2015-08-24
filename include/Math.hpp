@@ -23,28 +23,22 @@ namespace Kelly
         return degrees * Pi<T>() / T(180);
     }
 
-    template<typename T> constexpr const T& Min(const T& a, const T& b)
+    template<typename T> constexpr T Min(T a, T b)
     {
         return b < a ? b : a;
     }
 
-    template<typename T> constexpr const T& Max(const T& a, const T& b)
+    template<typename T> constexpr T Max(T a, T b)
     {
         return a < b ? b : a;
     }
 
-    template<typename T> constexpr const T& Bound(
-        const T& value,
-        const T& low,
-        const T& high)
+    template<typename T> constexpr T Bound(T value, T low, T high)
     {
         return Min(Max(value, low), high);
     }
 
-    template<typename T> constexpr bool InRange(
-        const T& value,
-        const T& low,
-        const T& high)
+    template<typename T> constexpr bool InRange(T value, T low, T high)
     {
         return low <= value && value <= high;
     }

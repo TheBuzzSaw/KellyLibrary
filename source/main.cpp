@@ -373,6 +373,11 @@ void RaceMaps()
     cout << sw.Elapsed() << " to linearly read unordered map: " << n << endl;
 
     cout << "\nDataMap is using " << (dm.RawSize() >> 10) << " KB." << endl;
+
+    DataMap<int, V3> dm2;
+    cout << "Testing assignment..." << endl;
+    dm2 = std::move(dm);
+    cout << "Done" << endl;
 }
 
 LoudMouth GetLoudMouth()

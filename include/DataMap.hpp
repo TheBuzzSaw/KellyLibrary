@@ -1,7 +1,6 @@
 #ifndef DATAMAP_HPP_KELLY
 #define DATAMAP_HPP_KELLY
 
-#include "Math.hpp"
 #include "View.hpp"
 #include <algorithm>
 #include <cstdlib>
@@ -20,7 +19,7 @@ namespace Kelly
 
         void Expand(ptrdiff_t capacity)
         {
-            auto proposedCapacity = Max<ptrdiff_t>(capacity, 8);
+            auto proposedCapacity = std::max<ptrdiff_t>(capacity, 8);
 
             _block = realloc(_block, proposedCapacity * KeyValueSize);
             assert(_block != nullptr);
@@ -92,6 +91,7 @@ namespace Kelly
             {
                 size_t totalSize = _capacity * KeyValueSize;
                 _block = malloc(totalSize);
+                assert(_block != nullptr);
                 memcpy(_block, other._block, totalSize);
             }
             else
@@ -109,8 +109,15 @@ namespace Kelly
         {
             if (this != &other)
             {
-                this->~DataMap();
-                new (this) DataMap(std::move(other));
+                free(_block);
+
+                _block = other._block;
+                _capacity = other._capacity;
+                _count = other._count;
+
+                other._block = nullptr;
+                other._capacity = 0;
+                other._count = 0;
             }
 
             return *this;
@@ -120,8 +127,8 @@ namespace Kelly
         {
             if (this != &other)
             {
-                this->~DataMap();
-                new (this) DataMap(other);
+                DataMap clone(other);
+                std::swap(*this, clone);
             }
 
             return *this;
@@ -155,14 +162,9 @@ namespace Kelly
             auto k = std::lower_bound(keys, endKey, key);
             auto position = k - keys;
 
-            if (k != endKey && *k == key)
-            {
-                return values[position];
-            }
-            else
-            {
-                return Insert(key, position);
-            }
+            if (k != endKey && *k == key) return values[position];
+
+            return Insert(key, position);
         }
 
         bool Add(K key, V value)
@@ -172,11 +174,11 @@ namespace Kelly
             auto endKey = keys + _count;
 
             auto k = std::lower_bound(keys, endKey, key);
-            auto position = k - keys;
 
             if (k != endKey && *k == key) return false;
-            Insert(key, value, position) = value;
 
+            auto position = k - keys;
+            Insert(key, position) = value;
             return true;
         }
 
@@ -208,7 +210,7 @@ namespace Kelly
                 auto position = k - keys;
                 auto moveCount = --_count - position;
 
-                memmove(k, k + 1, moveCount * sizeof(K));
+                memmove(k, k + 1, (size_t)moveCount * sizeof(K));
 
                 auto valueSlot = values + position;
                 memmove(valueSlot, valueSlot + 1, moveCount * sizeof(V));
