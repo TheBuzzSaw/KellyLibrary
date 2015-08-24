@@ -1,6 +1,7 @@
 #include "../include/Network/Endpoint32Query.hpp"
 #include "../include/Network/TcpListener.hpp"
 #include "../include/Network/TcpConnection.hpp"
+#include "../include/LoudMouth.hpp"
 #include "../include/DataMap.hpp"
 #include "../include/Tools.hpp"
 #include "../include/View.hpp"
@@ -372,9 +373,34 @@ void RaceMaps()
     cout << sw.Elapsed() << " to linearly read unordered map: " << n << endl;
 }
 
+LoudMouth GetLoudMouth()
+{
+    cout << "GetLoudMouth() -- ";
+    LoudMouth result;
+    result.Poke();
+    return result;
+}
+
+void TestLoudMouth()
+{
+    LoudMouth a, b;
+
+    cout << "assign to GetLoudMouth()" << endl;;
+    b = GetLoudMouth();
+
+    cout << "construct from GetLoudMouth()" << endl;
+    LoudMouth c(GetLoudMouth());
+
+    LoudMouth d(move(b));
+    LoudMouth e(a);
+
+    cout << "Vectors..." << endl;
+    vector<LoudMouth> loudMouths;
+    for (int i = 0; i < 8; ++i) loudMouths.emplace_back();
+}
+
 int main(int argc, char** argv)
 {
-    //TestMaps();
-    RaceMaps();
+    TestLoudMouth();
     return 0;
 }
