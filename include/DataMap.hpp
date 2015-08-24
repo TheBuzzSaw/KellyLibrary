@@ -12,15 +12,15 @@ namespace Kelly
 {
     template<typename K, typename V> class DataMap
     {
-        static constexpr auto KeyValueSize = sizeof(K) + sizeof(V);
+        static constexpr ptrdiff_t KeyValueSize = sizeof(K) + sizeof(V);
 
         void* _block;
-        int _capacity;
-        int _count;
+        ptrdiff_t _capacity;
+        ptrdiff_t _count;
 
-        void Expand(int capacity)
+        void Expand(ptrdiff_t capacity)
         {
-            auto proposedCapacity = Max(capacity, 8);
+            auto proposedCapacity = Max<ptrdiff_t>(capacity, 8);
 
             _block = realloc(_block, proposedCapacity * KeyValueSize);
             assert(_block != nullptr);
@@ -31,6 +31,39 @@ namespace Kelly
                 sizeof(V) * (size_t)_count);
 
             _capacity = proposedCapacity;
+        }
+
+        V* FindValue(K key) const noexcept
+        {
+            auto keys = (K*)_block;
+            auto endKey = keys + _count;
+
+            auto k = std::lower_bound(keys, endKey, key);
+
+            if (k != endKey && *k == key)
+            {
+                auto values = (V*)(keys + _capacity);
+                auto position = k - keys;
+                return values + position;
+            }
+
+            return nullptr;
+        }
+
+        V& Insert(K key, ptrdiff_t position)
+        {
+            if (_count == _capacity) Expand(_capacity * 2);
+            auto keys = (K*)_block;
+            auto values = (V*)(keys + _capacity);
+
+            auto moveCount = _count++ - position;
+            auto keySlot = keys + position;
+            memmove(keySlot + 1, keySlot, moveCount * sizeof(K));
+            *keySlot = key;
+
+            auto valueSlot = values + position;
+            memmove(valueSlot + 1, valueSlot, moveCount * sizeof(V));
+            return *valueSlot;
         }
 
     public:
@@ -57,7 +90,7 @@ namespace Kelly
         {
             if (_capacity > 0)
             {
-                auto totalSize = (size_t)_capacity * KeyValueSize;
+                size_t totalSize = _capacity * KeyValueSize;
                 _block = malloc(totalSize);
                 memcpy(_block, other._block, totalSize);
             }
@@ -94,25 +127,23 @@ namespace Kelly
             return *this;
         }
 
-        inline int Capacity() const noexcept { return _capacity; }
-        inline int Count() const noexcept { return _count; }
+        inline ptrdiff_t RawSize() const noexcept
+        {
+            return _capacity * KeyValueSize;
+        }
+
+        inline ptrdiff_t Capacity() const noexcept { return _capacity; }
+        inline ptrdiff_t Count() const noexcept { return _count; }
         inline void Clear() noexcept { _count = 0; }
 
         V* TryGet(K key) noexcept
         {
-            auto keys = (K*)_block;
-            auto endKey = keys + _count;
+            return FindValue(key);
+        }
 
-            auto k = std::lower_bound(keys, endKey, key);
-
-            if (k != endKey && *k == key)
-            {
-                auto values = (V*)(keys + _capacity);
-                auto distance = k - keys;
-                return values + distance;
-            }
-
-            return nullptr;
+        const V* TryGet(K key) const noexcept
+        {
+            return FindValue(key);
         }
 
         V& AlwaysGet(K key)
@@ -122,30 +153,31 @@ namespace Kelly
             auto endKey = keys + _count;
 
             auto k = std::lower_bound(keys, endKey, key);
-            auto distance = k - keys;
+            auto position = k - keys;
 
             if (k != endKey && *k == key)
             {
-                return values[distance];
+                return values[position];
             }
             else
             {
-                if (_count == _capacity)
-                {
-                    Expand(_capacity * 2);
-                    keys = (K*)_block;
-                    values = (V*)(keys + _capacity);
-                }
-
-                auto moveCount = _count++ - distance;
-                auto keySlot = keys + distance;
-                memmove(keySlot + 1, keySlot, moveCount * sizeof(K));
-                *keySlot = key;
-
-                auto valueSlot = values + distance;
-                memmove(valueSlot + 1, valueSlot, moveCount * sizeof(V));
-                return *valueSlot;
+                return Insert(key, position);
             }
+        }
+
+        bool Add(K key, V value)
+        {
+            auto keys = (K*)_block;
+            auto values = (V*)(keys + _capacity);
+            auto endKey = keys + _count;
+
+            auto k = std::lower_bound(keys, endKey, key);
+            auto position = k - keys;
+
+            if (k != endKey && *k == key) return false;
+            Insert(key, value, position) = value;
+
+            return true;
         }
 
         void Set(K key, V value)
@@ -155,30 +187,12 @@ namespace Kelly
             auto endKey = keys + _count;
 
             auto k = std::lower_bound(keys, endKey, key);
-            auto distance = k - keys;
+            auto position = k - keys;
 
             if (k != endKey && *k == key)
-            {
-                values[distance] = value;
-            }
+                values[position] = value;
             else
-            {
-                if (_count == _capacity)
-                {
-                    Expand(_capacity * 2);
-                    keys = (K*)_block;
-                    values = (V*)(keys + _capacity);
-                }
-
-                auto moveCount = _count++ - distance;
-                auto keySlot = keys + distance;
-                memmove(keySlot + 1, keySlot, moveCount * sizeof(K));
-                *keySlot = key;
-
-                auto valueSlot = values + distance;
-                memmove(valueSlot + 1, valueSlot, moveCount * sizeof(V));
-                *valueSlot = value;
-            }
+                Insert(key, position) = value;
         }
 
         bool Remove(K key) noexcept
@@ -191,12 +205,12 @@ namespace Kelly
             if (k != endKey && *k == key)
             {
                 auto values = (V*)(keys + _capacity);
-                auto distance = k - keys;
-                auto moveCount = --_count - distance;
+                auto position = k - keys;
+                auto moveCount = --_count - position;
 
                 memmove(k, k + 1, moveCount * sizeof(K));
 
-                auto valueSlot = values + distance;
+                auto valueSlot = values + position;
                 memmove(valueSlot, valueSlot + 1, moveCount * sizeof(V));
                 return true;
             }
@@ -204,7 +218,7 @@ namespace Kelly
             return false;
         }
 
-        void Reserve(int capacity)
+        void Reserve(ptrdiff_t capacity)
         {
             if (capacity > _capacity) Expand(capacity);
         }

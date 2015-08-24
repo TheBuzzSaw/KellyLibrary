@@ -371,6 +371,8 @@ void RaceMaps()
     sw.Stop();
 
     cout << sw.Elapsed() << " to linearly read unordered map: " << n << endl;
+
+    cout << "\nDataMap is using " << (dm.RawSize() >> 10) << " KB." << endl;
 }
 
 LoudMouth GetLoudMouth()
@@ -401,6 +403,6 @@ void TestLoudMouth()
 
 int main(int argc, char** argv)
 {
-    TestLoudMouth();
+    RaceMaps();
     return 0;
 }
