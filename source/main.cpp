@@ -378,6 +378,8 @@ void RaceMaps()
     cout << "Testing assignment..." << endl;
     dm2 = std::move(dm);
     cout << "Done" << endl;
+
+    dm.Add(1, {});
 }
 
 LoudMouth GetLoudMouth()

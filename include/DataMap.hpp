@@ -21,8 +21,9 @@ namespace Kelly
         {
             auto proposedCapacity = std::max<ptrdiff_t>(capacity, 8);
 
-            _block = realloc(_block, proposedCapacity * KeyValueSize);
-            assert(_block != nullptr);
+            void* block = realloc(_block, proposedCapacity * KeyValueSize);
+            assert(block != nullptr);
+            _block = block;
 
             memmove(
                 (K*)_block + proposedCapacity,
@@ -84,19 +85,22 @@ namespace Kelly
         }
 
         DataMap(const DataMap& other)
-            : _capacity(other._capacity)
-            , _count(other._count)
+            : DataMap()
         {
-            if (_capacity > 0)
+            if (other._count > 0)
             {
-                size_t totalSize = _capacity * KeyValueSize;
-                _block = malloc(totalSize);
-                assert(_block != nullptr);
-                memcpy(_block, other._block, totalSize);
-            }
-            else
-            {
-                _block = nullptr;
+                Expand(other._count);
+                _count = other._count;
+
+                memcpy(
+                    _block,
+                    other._block,
+                    (size_t)_count * sizeof(K));
+
+                memcpy(
+                    (K*)_block + _capacity,
+                    (K*)other._block + other._capacity,
+                    (size_t)_count * sizeof(V));
             }
         }
 
@@ -127,21 +131,47 @@ namespace Kelly
         {
             if (this != &other)
             {
-                DataMap clone(other);
-                std::swap(*this, clone);
+                if (_capacity < other._count)
+                {
+                    _count = 0;
+                    Expand(other._count);
+                }
+
+                _count = other._count;
+
+                memcpy(
+                    _block,
+                    other._block,
+                    (size_t)_count * sizeof(K));
+
+                memcpy(
+                    (K*)_block + _capacity,
+                    (K*)other._block + other._capacity,
+                    (size_t)_count * sizeof(V));
             }
 
             return *this;
         }
 
-        inline ptrdiff_t RawSize() const noexcept
+        ptrdiff_t RawSize() const noexcept
         {
             return _capacity * KeyValueSize;
         }
 
-        inline ptrdiff_t Capacity() const noexcept { return _capacity; }
-        inline ptrdiff_t Count() const noexcept { return _count; }
-        inline void Clear() noexcept { _count = 0; }
+        ptrdiff_t Capacity() const noexcept
+        {
+            return _capacity;
+        }
+
+        ptrdiff_t Count() const noexcept
+        {
+            return _count;
+        }
+
+        void Clear() noexcept
+        {
+            _count = 0;
+        }
 
         V* TryGet(K key) noexcept
         {
@@ -156,13 +186,16 @@ namespace Kelly
         V& AlwaysGet(K key)
         {
             auto keys = (K*)_block;
-            auto values = (V*)(keys + _capacity);
             auto endKey = keys + _count;
 
             auto k = std::lower_bound(keys, endKey, key);
             auto position = k - keys;
 
-            if (k != endKey && *k == key) return values[position];
+            if (k != endKey && *k == key)
+            {
+                auto values = (V*)(keys + _capacity);
+                return values[position];
+            }
 
             return Insert(key, position);
         }
@@ -170,7 +203,6 @@ namespace Kelly
         bool Add(K key, V value)
         {
             auto keys = (K*)_block;
-            auto values = (V*)(keys + _capacity);
             auto endKey = keys + _count;
 
             auto k = std::lower_bound(keys, endKey, key);
@@ -235,12 +267,12 @@ namespace Kelly
             return { (V*)((K*)_block + _capacity), _count };
         }
 
-        View<const K> ConstKeys() const noexcept
+        View<const K> Keys() const noexcept
         {
             return { (K*)_block, _count };
         }
 
-        View<const V> ConstValues() const noexcept
+        View<const V> Values() const noexcept
         {
             return { (V*)((K*)_block + _capacity), _count };
         }

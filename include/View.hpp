@@ -18,21 +18,7 @@ namespace Kelly
         constexpr T* end() const { return data + n; }
     };
 
-    template<typename T> constexpr View<uint8_t> ToByteView(
-        const View<T>& view)
-    {
-        return { (uint8_t*)view.data, view.n * sizeof(T) };
-    }
-
-    template<typename T> constexpr View<const uint8_t> ToReadOnlyByteView(
-        const View<T>& view)
-    {
-        return { (const uint8_t*)view.data, view.n * sizeof(T) };
-    }
-
-    template<typename T> inline void Copy(
-        const View<T>& destination,
-        const View<const T>& source)
+    template<typename T> void Copy(View<T> destination, View<const T> source)
     {
         memcpy(
             destination.data,
@@ -40,7 +26,7 @@ namespace Kelly
             sizeof(T) * Min(destination.n, source.n));
     }
 
-    template<typename T> inline void Zero(const View<T>& view)
+    template<typename T> void Zero(View<T> view)
     {
         memset(view, 0, sizeof(T) * view.n);
     }
