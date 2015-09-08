@@ -26,6 +26,22 @@ namespace Kelly
         return (r.a < T(0)) ^ (r.b < T(0));
     }
 
+    template<typename T> constexpr Rational<T> Normalized(Rational<T> r)
+    {
+        return r.b < T(0) ? Rational<T>{r.a, r.b} : Rational<T>{-r.a, -r.b};
+    }
+
+    template<typename T> constexpr T InternalCompare(
+        Rational<T> r1, Rational<T> r2)
+    {
+        return r1.a * r2.b - r2.a * r1.b;
+    }
+
+    template<typename T> constexpr T Compare(Rational<T> r1, Rational<T> r2)
+    {
+        return InternalCompare(Normalized(r1), Normalized(r2));
+    }
+
     template<typename T> constexpr Rational<T> operator-(Rational<T> r)
     {
         return {-r.a, r.b};
@@ -73,6 +89,42 @@ namespace Kelly
     template<typename T> constexpr Rational<T> operator/(Rational<T> r, T n)
     {
         return {r.a, r.b * n};
+    }
+
+    template<typename T> constexpr bool operator==(
+        Rational<T> r1, Rational<T> r2)
+    {
+        return Compare(r1, r2) == T(0);
+    }
+
+    template<typename T> constexpr bool operator!=(
+        Rational<T> r1, Rational<T> r2)
+    {
+        return Compare(r1, r2) != T(0);
+    }
+
+    template<typename T> constexpr bool operator<(
+        Rational<T> r1, Rational<T> r2)
+    {
+        return Compare(r1, r2) < T(0);
+    }
+
+    template<typename T> constexpr bool operator>(
+        Rational<T> r1, Rational<T> r2)
+    {
+        return Compare(r1, r2) > T(0);
+    }
+
+    template<typename T> constexpr bool operator<=(
+        Rational<T> r1, Rational<T> r2)
+    {
+        return Compare(r1, r2) <= T(0);
+    }
+
+    template<typename T> constexpr bool operator>=(
+        Rational<T> r1, Rational<T> r2)
+    {
+        return Compare(r1, r2) >= T(0);
     }
 
     template<typename T> Rational<T>& Rational<T>::operator+=(Rational<T> r)

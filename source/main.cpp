@@ -2,14 +2,23 @@
 using namespace Kelly;
 using namespace std;
 
+void TestOperators(Rational<int> r1, Rational<int> r2)
+{
+    cout << "compare " << r1 << " to " << r2;
+
+    cout
+        << "\n== " << (r1 == r2)
+        << "\n!= " << (r1 != r2)
+        << "\n< " << (r1 < r2)
+        << "\n> " << (r1 > r2)
+        << "\n<= " << (r1 <= r2)
+        << "\n>= " << (r1 >= r2)
+        << "\n/ " << (r1 / r2)
+        << endl;
+}
+
 int main(int argc, char** argv)
 {
-    Rational<int> a{1, 3};
-    Rational<int> b{2, 3};
-    a += b;
-    a += 3;
-    a /= 2;
-    cout << a << endl;
-    cout << IsNegative(Rational<int>{1, 1}) << endl;
+    TestOperators({1, 3}, {-1, -6});
     return 0;
 }
