@@ -26,7 +26,7 @@ namespace Kelly
 
     static TimeSpan timerBase;
 
-    const TimeSpan RawTimer()
+    TimeSpan RawTimer()
     {
         timespec ts;
         clock_gettime(Clock, &ts);
@@ -41,7 +41,7 @@ namespace Kelly
         timerBase = RawTimer();
     }
 
-    const TimeSpan ReadTimer()
+    TimeSpan ReadTimer()
     {
         return RawTimer() - timerBase;
     }

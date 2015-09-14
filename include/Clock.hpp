@@ -5,10 +5,10 @@
 
 namespace Kelly
 {
-    void Sleep(const TimeSpan timeSpan);
-    const DateTime GetNativeTime();
+    void Sleep(TimeSpan timeSpan);
+    DateTime GetNativeTime();
     void ResetTimer();
-    const TimeSpan ReadTimer();
+    TimeSpan ReadTimer();
 }
 
 #endif

@@ -3,12 +3,12 @@
 #include <sys/time.h>
 #include <mach/mach_time.h>
 
-void Sleep(const TimeSpan timeSpan)
+void Sleep(TimeSpan timeSpan)
 {
     usleep(timeSpan.ToMicroseconds());
 }
 
-const DateTime GetNativeTime()
+DateTime GetNativeTime()
 {
     timeval tv;
     gettimeofday(&tv, NULL);
@@ -27,7 +27,7 @@ void ResetTimer()
     timerBase = mach_absolute_time();
 }
 
-const TimeSpan ReadTimer()
+TimeSpan ReadTimer()
 {
     uint64_t end = mach_absolute_time();
     uint64_t elapsed = end - timerBase;
