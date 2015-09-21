@@ -55,6 +55,7 @@
 		<Unit filename="../include/Rational.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
 		<Unit filename="../include/Stopwatch.hpp" />
+		<Unit filename="../include/StructureOfArrays.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />
 		<Unit filename="../include/Tools.hpp" />
 		<Unit filename="../include/View.hpp" />
