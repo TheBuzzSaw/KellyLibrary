@@ -9,7 +9,6 @@ namespace Kelly
     {
         _originalId = ++lastId;
         _currentId = _originalId;
-        _junk = 0;
 
         cout << "construct " << *this << endl;
     }
@@ -18,7 +17,6 @@ namespace Kelly
     {
         _originalId = ++lastId;
         _currentId = other._currentId;
-        _junk = other._junk;
 
         cout << "move construct " << *this << " from " << other << endl;
 
@@ -29,7 +27,6 @@ namespace Kelly
     {
         _originalId = ++lastId;
         _currentId = other._currentId;
-        _junk = other._junk;
 
         cout << "copy construct " << *this << " from " << other << endl;
     }

@@ -1,24 +1,31 @@
-#include "../include/Rational.hpp"
+#include "../include/StructureOfArrays.hpp"
+#include <string>
+#include <cstring>
+#include <iostream>
 using namespace Kelly;
 using namespace std;
 
-void TestOperators(Rational<int> r1, Rational<int> r2)
+void TestStructureOfArrays()
 {
-    cout << "compare " << r1 << " to " << r2;
+    StructureOfArrays<4> soa{4, 2, 2, 8};
+    soa.Resize(3);
+    cout << "capacity: " << soa.Capacity() << endl;
+    cout << "count: " << soa.Count() << endl;
+    auto values = soa.GetArray<int64_t>(3);
+    for (auto& value : values) value = 555;
+    for (auto value : values) cout << ' ' << value;
+    cout << '\n';
 
-    cout
-        << "\n== " << (r1 == r2)
-        << "\n!= " << (r1 != r2)
-        << "\n< " << (r1 < r2)
-        << "\n> " << (r1 > r2)
-        << "\n<= " << (r1 <= r2)
-        << "\n>= " << (r1 >= r2)
-        << "\n/ " << (r1 / r2)
-        << endl;
+    soa.Resize(55);
+    soa.Resize(3);
+    cout << "capacity: " << soa.Capacity() << endl;
+    cout << "count: " << soa.Count() << endl;
+    values = soa.GetArray<int64_t>(3);
+    for (auto value : values) cout << ' ' << value;
 }
 
 int main(int argc, char** argv)
 {
-    TestOperators({1, 3}, {-1, -6});
+    TestStructureOfArrays();
     return 0;
 }

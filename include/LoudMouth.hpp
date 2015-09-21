@@ -9,7 +9,6 @@ namespace Kelly
     {
         unsigned int _originalId;
         unsigned int _currentId;
-        unsigned int _junk;
 
     public:
         LoudMouth();
@@ -19,8 +18,6 @@ namespace Kelly
 
         LoudMouth& operator=(LoudMouth&& other);
         LoudMouth& operator=(const LoudMouth& other);
-
-        inline void Poke() { _junk ^= 0xdeadbeef; }
 
         std::ostream& Write(std::ostream& stream) const;
     };

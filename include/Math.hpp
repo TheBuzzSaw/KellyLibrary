@@ -30,7 +30,7 @@ namespace Kelly
 
     template<typename T> constexpr T Max(T a, T b)
     {
-        return a < b ? b : a;
+        return b < a ? a : b;
     }
 
     template<typename T> constexpr T Bound(T value, T low, T high)
