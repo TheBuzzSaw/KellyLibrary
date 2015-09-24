@@ -63,6 +63,8 @@ namespace Kelly
             else
                 low = middle + 1;
         }
+
+        return -1;
     }
 }
 
