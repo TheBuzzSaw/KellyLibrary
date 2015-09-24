@@ -53,6 +53,7 @@
 		<Unit filename="../include/Network/TcpListener.hpp" />
 		<Unit filename="../include/Network/TcpSocket.hpp" />
 		<Unit filename="../include/Rational.hpp" />
+		<Unit filename="../include/Region.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
 		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/StructureOfArrays.hpp" />
@@ -65,6 +66,7 @@
 		<Unit filename="../source/FileTools.cpp" />
 		<Unit filename="../source/Linux/Clock.cpp" />
 		<Unit filename="../source/LoudMouth.cpp" />
+		<Unit filename="../source/Region.cpp" />
 		<Unit filename="../source/Stopwatch.cpp" />
 		<Unit filename="../source/TcpConnection.cpp" />
 		<Unit filename="../source/TcpListener.cpp" />
