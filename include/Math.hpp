@@ -42,6 +42,28 @@ namespace Kelly
     {
         return low <= value && value <= high;
     }
+
+    template<typename T> T IntRoot(T value)
+    {
+        T low = 0;
+        T high = value;
+
+        while (low <= high)
+        {
+            T middle = (low + high) / 2;
+            T square = middle * middle;
+
+            T nextMiddle = middle + 1;
+            T nextSquare = nextMiddle * nextMiddle;
+
+            if (square <= value && value < nextSquare) return middle;
+
+            if (square > value)
+                high = middle - 1;
+            else
+                low = middle + 1;
+        }
+    }
 }
 
 #endif

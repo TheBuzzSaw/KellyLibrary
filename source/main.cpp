@@ -31,11 +31,11 @@ void TestRegion()
     Region region;
 
     mt19937_64 mt;
-    uniform_int_distribution<int> distribution(1, 16);
+    uniform_int_distribution<int> distribution(1, 64);
 
     for (int i = 0; i < 8; ++i)
     {
-        for (int j = 0; j < (1 << 16); ++j)
+        for (int j = 0; j < (1 << 12); ++j)
         {
             int count = distribution(mt);
             auto values = new (region) int[count];
@@ -48,8 +48,16 @@ void TestRegion()
     }
 }
 
+void TestRoot()
+{
+    for (int i = 0; i < 26; ++i)
+        cout << ' ' << i << '(' << IntRoot(i) << ')';
+
+    cout << endl;
+}
+
 int main(int argc, char** argv)
 {
-    TestRegion();
+    TestRoot();
     return 0;
 }

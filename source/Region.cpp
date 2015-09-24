@@ -8,7 +8,7 @@ namespace Kelly
     {
         PageHeader* next;
         char* freeBlock;
-        int remainingByteCount;
+        int freeByteCount;
         int allocationCount;
     };
 
@@ -56,7 +56,7 @@ namespace Kelly
 
         auto header = (PageHeader*)_block;
 
-        while (header && header->remainingByteCount < byteCount)
+        while (header && header->freeByteCount < byteCount)
             header = header->next;
 
         if (!header)
@@ -66,7 +66,7 @@ namespace Kelly
             header = (PageHeader*)malloc(PageSize);
             header->next = (PageHeader*)_block;
             header->freeBlock = (char*)(header + 1);
-            header->remainingByteCount = PageSize - sizeof(PageHeader);
+            header->freeByteCount = PageSize - sizeof(PageHeader);
             header->allocationCount = 0;
 
             _block = header;
@@ -74,7 +74,7 @@ namespace Kelly
 
         void* result = header->freeBlock;
         header->freeBlock += byteCount;
-        header->remainingByteCount -= byteCount;
+        header->freeByteCount -= byteCount;
         ++header->allocationCount;
         return result;
     }
@@ -100,8 +100,8 @@ namespace Kelly
             std::cout << '\n' << header->allocationCount << " allocation";
             if (header->allocationCount != 1) std::cout << 's';
 
-            std::cout << ", " << header->remainingByteCount << " byte";
-            if (header->remainingByteCount != 1) std::cout << 's';
+            std::cout << ", " << header->freeByteCount << " byte";
+            if (header->freeByteCount != 1) std::cout << 's';
             std::cout << " free";
 
             header = header->next;
