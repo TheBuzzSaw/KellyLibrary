@@ -8,6 +8,7 @@ namespace Kelly
     class Region
     {
         void* _block;
+        int _newPageByteCount;
 
         void Release() noexcept;
 
@@ -23,6 +24,13 @@ namespace Kelly
         void* Allocate(int byteCount);
         int PageCount() const noexcept;
         void DebugDump() const;
+
+        inline int NewPageByteCount() const noexcept
+        {
+            return _newPageByteCount;
+        }
+
+        void SetNewPageByteCount(int newPageByteCount);
     };
 }
 

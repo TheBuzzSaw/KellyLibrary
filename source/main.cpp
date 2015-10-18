@@ -1,3 +1,4 @@
+#include "../include/Matrix4x4.hpp"
 #include "../include/Region.hpp"
 #include "../include/StructureOfArrays.hpp"
 #include <string>
@@ -31,7 +32,7 @@ void TestRegion()
     Region region;
 
     mt19937_64 mt;
-    uniform_int_distribution<int> distribution(1, 64);
+    uniform_int_distribution<int> distribution(1, 128);
 
     for (int i = 0; i < 8; ++i)
     {
@@ -46,6 +47,11 @@ void TestRegion()
 
         region.DebugDump();
     }
+
+    cout << "Fill the gaps with tiny allocations..." << endl;
+    for (int i = 0; i < 1 << 20; ++i) new (region) int(7);
+
+    region.DebugDump();
 }
 
 void TestRoot()
@@ -56,8 +62,17 @@ void TestRoot()
     cout << endl;
 }
 
+template<typename Ta, typename Tb> constexpr Ta bit_cast(const Tb& value)
+{
+    return *reinterpret_cast<const Ta*>(&value);
+}
+
 int main(int argc, char** argv)
 {
-    TestRoot();
+    Matrix4x4F m;
+    cout << m << endl;
+
+    //TestRoot();
+    TestRegion();
     return 0;
 }

@@ -1,13 +1,17 @@
 #include "../include/Region.hpp"
+#include "../include/Math.hpp"
 #include <iostream>
 #include <cassert>
 
 namespace Kelly
 {
+    static constexpr int DefaultNewPageByteCount = 1 << 20;
+
     struct PageHeader
     {
         PageHeader* next;
         char* freeBlock;
+        int pageByteCount;
         int freeByteCount;
         int allocationCount;
     };
@@ -24,13 +28,16 @@ namespace Kelly
         }
     }
 
-    Region::Region() noexcept : _block(nullptr)
+    Region::Region() noexcept
+        : _block(nullptr), _newPageByteCount(DefaultNewPageByteCount)
     {
     }
 
-    Region::Region(Region&& other) noexcept : _block(other._block)
+    Region::Region(Region&& other) noexcept
+        : _block(other._block), _newPageByteCount(other._newPageByteCount)
     {
         other._block = nullptr;
+        other._newPageByteCount = DefaultNewPageByteCount;
     }
 
     Region::~Region()
@@ -44,7 +51,10 @@ namespace Kelly
         {
             Release();
             _block = other._block;
+            _newPageByteCount = other._newPageByteCount;
+
             other._block = nullptr;
+            other._newPageByteCount = DefaultNewPageByteCount;
         }
 
         return *this;
@@ -61,12 +71,12 @@ namespace Kelly
 
         if (!header)
         {
-            constexpr int PageSize = 1 << 20;
-            assert(PageSize > byteCount);
-            header = (PageHeader*)malloc(PageSize);
+            assert(_newPageByteCount > byteCount);
+            header = (PageHeader*)malloc(_newPageByteCount);
             header->next = (PageHeader*)_block;
             header->freeBlock = (char*)(header + 1);
-            header->freeByteCount = PageSize - sizeof(PageHeader);
+            header->pageByteCount = _newPageByteCount;
+            header->freeByteCount = _newPageByteCount - sizeof(PageHeader);
             header->allocationCount = 0;
 
             _block = header;
@@ -83,7 +93,7 @@ namespace Kelly
     {
         int result = 0;
 
-        for (auto header = (PageHeader*)_block; header; header = header->next)
+        for (auto i = (PageHeader*)_block; i; i = i->next)
             ++result;
 
         return result;
@@ -93,11 +103,12 @@ namespace Kelly
     {
         auto header = (PageHeader*)_block;
 
-        std::cout << "--- REGION " << (void*)this << " ---";
+        std::cout << "--- REGION " << (const void*)this << " ---";
 
         while (header)
         {
-            std::cout << '\n' << header->allocationCount << " allocation";
+            std::cout << '\n' << header->pageByteCount << " byte page, ";
+            std::cout << header->allocationCount << " allocation";
             if (header->allocationCount != 1) std::cout << 's';
 
             std::cout << ", " << header->freeByteCount << " byte";
@@ -108,6 +119,12 @@ namespace Kelly
         }
 
         std::cout << std::endl;
+    }
+
+    void Region::SetNewPageByteCount(int newPageByteCount)
+    {
+        _newPageByteCount =
+            Max<int>(newPageByteCount, sizeof(PageHeader) * 16);
     }
 }
 

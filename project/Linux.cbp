@@ -46,6 +46,7 @@
 		<Unit filename="../include/FileTools.hpp" />
 		<Unit filename="../include/LoudMouth.hpp" />
 		<Unit filename="../include/Math.hpp" />
+		<Unit filename="../include/Matrix4x4.hpp" />
 		<Unit filename="../include/Network/Address32.hpp" />
 		<Unit filename="../include/Network/Endpoint32.hpp" />
 		<Unit filename="../include/Network/Endpoint32Query.hpp" />
@@ -55,6 +56,7 @@
 		<Unit filename="../include/Rational.hpp" />
 		<Unit filename="../include/Region.hpp" />
 		<Unit filename="../include/Rotation.hpp" />
+		<Unit filename="../include/StaticRegion.hpp" />
 		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/StructureOfArrays.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />
