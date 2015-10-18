@@ -59,7 +59,7 @@ namespace Kelly
             matrix[6] = y * z * ci + (x * s);
             matrix[10] = z * z * ci + c;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& RotateX(T radians)
@@ -74,7 +74,7 @@ namespace Kelly
             matrix[6] = s;
             matrix[10] = c;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& RotateY(T radians)
@@ -89,7 +89,7 @@ namespace Kelly
             matrix[2] = -s;
             matrix[10] = c;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& RotateZ(T radians)
@@ -104,7 +104,7 @@ namespace Kelly
             matrix[1] = s;
             matrix[5] = c;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& Scale(T scale)
@@ -115,7 +115,7 @@ namespace Kelly
             matrix[5] = scale;
             matrix[10] = scale;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& ScaleX(T scale)
@@ -124,7 +124,7 @@ namespace Kelly
 
             matrix[0] = scale;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& ScaleY(T scale)
@@ -133,7 +133,7 @@ namespace Kelly
 
             matrix[5] = scale;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& ScaleZ(T scale)
@@ -142,7 +142,7 @@ namespace Kelly
 
             matrix[10] = scale;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& Scale(T x, T y, T z)
@@ -153,7 +153,7 @@ namespace Kelly
             matrix[5] = y;
             matrix[10] = z;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& Translate(T x, T y, T z)
@@ -164,7 +164,7 @@ namespace Kelly
             matrix[13] = y;
             matrix[14] = z;
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         /// projection
@@ -182,7 +182,7 @@ namespace Kelly
             matrix[11] = T(-1);
             matrix[15] = T(0);
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& Perspective(
@@ -209,7 +209,7 @@ namespace Kelly
             matrix[11] = T(-1);
             matrix[15] = T(0);
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& Orthographic(
@@ -224,7 +224,7 @@ namespace Kelly
             matrix[10] = T(2) / (near - far);
             matrix[14] = (far + near) / (far - near);
 
-            return Multiply(Matrix4x4<T>(_values), matrix);
+            return Multiply(Matrix4x4<T>(*this), matrix);
         }
 
         Matrix4x4<T>& Orthographic(T range, T ratio)
@@ -617,12 +617,12 @@ namespace Kelly
 
         Matrix4x4<T>& operator*=(const Matrix4x4<T>& other)
         {
-            return Multiply(Matrix4x4<T>(_values), other);
+            return Multiply(Matrix4x4<T>(*this), other);
         }
 
-        const Matrix4x4<T> operator*(const Matrix4x4<T>& other) const
+        Matrix4x4<T> operator*(const Matrix4x4<T>& other) const
         {
-            return Matrix4x4<T>(Matrix4x4<T>(_values), other);
+            return Matrix4x4<T>(Matrix4x4<T>(*this), other);
         }
     };
 
