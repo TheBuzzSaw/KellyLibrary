@@ -6,26 +6,26 @@ namespace Kelly
     static const int DaysInMonths[] =
         { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-    static constexpr int64_t DaysPerYear = 365;
-    static constexpr int64_t TicksPerYear = TicksPerDay * DaysPerYear;
-    static constexpr int64_t DaysPerFourCenturies = DaysPerYear * 400 + 97;
-    static constexpr int64_t DaysPerCentury = DaysPerYear * 100 + 24;
-    static constexpr int64_t DaysPerFourYears = DaysPerYear * 4 + 1;
+    static constexpr int DaysPerYear = 365;
+    static constexpr int TicksPerYear = TicksPerDay * DaysPerYear;
+    static constexpr int DaysPerFourCenturies = DaysPerYear * 400 + 97;
+    static constexpr int DaysPerCentury = DaysPerYear * 100 + 24;
+    static constexpr int DaysPerFourYears = DaysPerYear * 4 + 1;
 
     std::pair<int, int> ExtractYears(int days)
     {
-        int64_t year = 1;
+        int year = 1;
 
         if (days >= DaysPerFourCenturies)
         {
-            int64_t chunks = days / DaysPerFourCenturies;
+            int chunks = days / DaysPerFourCenturies;
             year += chunks * 400;
             days -= chunks * DaysPerFourCenturies;
         }
 
         if (days >= DaysPerCentury)
         {
-            int64_t chunks = days / DaysPerCentury;
+            int chunks = days / DaysPerCentury;
             if (chunks == 4) chunks = 3;
             year += chunks * 100;
             days -= chunks * DaysPerCentury;
@@ -33,14 +33,14 @@ namespace Kelly
 
         if (days >= DaysPerFourYears)
         {
-            int64_t chunks = days / DaysPerFourYears;
+            int chunks = days / DaysPerFourYears;
             year += chunks * 4;
             days -= chunks * DaysPerFourYears;
         }
 
         if (days >= DaysPerYear)
         {
-            int64_t chunks = days / DaysPerYear;
+            int chunks = days / DaysPerYear;
             if (chunks == 4) chunks = 3;
             year += chunks;
             days -= chunks * DaysPerYear;
@@ -51,9 +51,9 @@ namespace Kelly
 
     std::pair<int, int> ExtractMonth(int days, int year)
     {
-        int64_t month = 1;
+        int month = 1;
 
-        for (int64_t daysInMonth = DateTime::DaysInMonth(month, year);
+        for (int daysInMonth = DateTime::DaysInMonth(month, year);
             days >= daysInMonth;
             daysInMonth = DateTime::DaysInMonth(month, year))
         {
