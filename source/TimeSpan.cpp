@@ -19,13 +19,13 @@ namespace Kelly
         }
     }
 
-    TimeSpan& TimeSpan::operator+=(const TimeSpan& other)
+    TimeSpan& TimeSpan::operator+=(TimeSpan other)
     {
         _ticks += other._ticks;
         return *this;
     }
 
-    TimeSpan& TimeSpan::operator-=(const TimeSpan& other)
+    TimeSpan& TimeSpan::operator-=(TimeSpan other)
     {
         _ticks -= other._ticks;
         return *this;

@@ -42,6 +42,7 @@
 		<Unit filename="../include/CString.hpp" />
 		<Unit filename="../include/Clock.hpp" />
 		<Unit filename="../include/DataMap.hpp" />
+		<Unit filename="../include/Date.hpp" />
 		<Unit filename="../include/DateTime.hpp" />
 		<Unit filename="../include/FileTools.hpp" />
 		<Unit filename="../include/LoudMouth.hpp" />

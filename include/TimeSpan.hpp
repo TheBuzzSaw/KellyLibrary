@@ -30,54 +30,9 @@ namespace Kelly
 
         constexpr int64_t Ticks() const { return _ticks; }
 
-        TimeSpan& operator=(const TimeSpan& other) = default;
-        TimeSpan& operator+=(const TimeSpan& other);
-        TimeSpan& operator-=(const TimeSpan& other);
-
-        constexpr bool operator==(const TimeSpan& other) const
-        {
-            return _ticks == other._ticks;
-        }
-
-        constexpr bool operator!=(const TimeSpan& other) const
-        {
-            return _ticks != other._ticks;
-        }
-
-        constexpr bool operator<(const TimeSpan& other) const
-        {
-            return _ticks < other._ticks;
-        }
-
-        constexpr bool operator<=(const TimeSpan& other) const
-        {
-            return _ticks <= other._ticks;
-        }
-
-        constexpr bool operator>(const TimeSpan& other) const
-        {
-            return _ticks > other._ticks;
-        }
-
-        constexpr bool operator>=(const TimeSpan& other) const
-        {
-            return _ticks >= other._ticks;
-        }
-
-        constexpr TimeSpan operator+(const TimeSpan& other) const
-        {
-            return TimeSpan(_ticks + other._ticks);
-        }
-
-        constexpr TimeSpan operator-(const TimeSpan& other) const
-        {
-            return TimeSpan(_ticks - other._ticks);
-        }
-
-        constexpr TimeSpan operator-() const
-        {
-            return TimeSpan(-_ticks);
-        }
+        TimeSpan& operator=(const TimeSpan&) = default;
+        TimeSpan& operator+=(TimeSpan other);
+        TimeSpan& operator-=(TimeSpan other);
 
         constexpr int64_t ToNanoseconds() const
         {
@@ -175,31 +130,76 @@ namespace Kelly
         }
     };
 
+    constexpr bool operator==(TimeSpan a, TimeSpan b)
+    {
+        return a.Ticks() == b.Ticks();
+    }
+
+    constexpr bool operator!=(TimeSpan a, TimeSpan b)
+    {
+        return a.Ticks() != b.Ticks();
+    }
+
+    constexpr bool operator<(TimeSpan a, TimeSpan b)
+    {
+        return a.Ticks() < b.Ticks();
+    }
+
+    constexpr bool operator<=(TimeSpan a, TimeSpan b)
+    {
+        return a.Ticks() <= b.Ticks();
+    }
+
+    constexpr bool operator>(TimeSpan a, TimeSpan b)
+    {
+        return a.Ticks() > b.Ticks();
+    }
+
+    constexpr bool operator>=(TimeSpan a, TimeSpan b)
+    {
+        return a.Ticks() >= b.Ticks();
+    }
+
+    constexpr TimeSpan operator+(TimeSpan a, TimeSpan b)
+    {
+        return TimeSpan(a.Ticks() + b.Ticks());
+    }
+
+    constexpr TimeSpan operator-(TimeSpan a, TimeSpan b)
+    {
+        return TimeSpan(a.Ticks() - b.Ticks());
+    }
+
+    constexpr TimeSpan operator-(TimeSpan ts)
+    {
+        return TimeSpan(-ts.Ticks());
+    }
+
     template<typename CharT, typename TraitsT>
     std::basic_ostream<CharT, TraitsT>& operator<<(
         std::basic_ostream<CharT, TraitsT>& stream,
-        const TimeSpan& timeSpan)
+        TimeSpan ts)
     {
-        int64_t count = timeSpan.ToWeeks();
-        stream << count << 'w';
+        int64_t n = ts.ToWeeks();
+        stream << n << 'w';
 
-        count = timeSpan.ToDays() - timeSpan.ToWeeks() * 7;
-        stream << count << 'd';
+        n = ts.ToDays() - ts.ToWeeks() * 7;
+        stream << n << 'd';
 
-        count = timeSpan.ToHours() - timeSpan.ToDays() * 24;
-        stream << count << 'h';
+        n = ts.ToHours() - ts.ToDays() * 24;
+        stream << n << 'h';
 
-        count = timeSpan.ToMinutes() - timeSpan.ToHours() * 60;
-        stream << count << 'm';
+        n = ts.ToMinutes() - ts.ToHours() * 60;
+        stream << n << 'm';
 
-        count = timeSpan.ToSeconds() - timeSpan.ToMinutes() * 60;
-        stream << count << 's';
+        n = ts.ToSeconds() - ts.ToMinutes() * 60;
+        stream << n << 's';
 
-        count = timeSpan.ToMilliseconds() - timeSpan.ToSeconds() * 1000;
-        stream << count << "ms";
+        n = ts.ToMilliseconds() - ts.ToSeconds() * 1000;
+        stream << n << "ms";
 
-        count = timeSpan.ToMicroseconds() - timeSpan.ToMilliseconds() * 1000;
-        stream << count << "us";
+        n = ts.ToMicroseconds() - ts.ToMilliseconds() * 1000;
+        stream << n << "us";
 
         return stream;
     }

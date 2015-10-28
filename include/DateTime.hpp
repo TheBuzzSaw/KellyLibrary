@@ -37,56 +37,11 @@ namespace Kelly
         constexpr int64_t Ticks() const { return _ticks; }
         constexpr operator bool() const { return _ticks > 0; }
 
-        DateTime& operator=(const DateTime& other) = default;
-        DateTime& operator+=(const TimeSpan& timeSpan);
-        DateTime& operator-=(const TimeSpan& timeSpan);
+        DateTime& operator=(const DateTime&) = default;
+        DateTime& operator+=(TimeSpan timeSpan);
+        DateTime& operator-=(TimeSpan timeSpan);
 
-        constexpr bool operator==(const DateTime& other) const
-        {
-            return _ticks == other._ticks;
-        }
-
-        constexpr bool operator!=(const DateTime& other) const
-        {
-            return _ticks != other._ticks;
-        }
-
-        constexpr bool operator<(const DateTime& other) const
-        {
-            return _ticks < other._ticks;
-        }
-
-        constexpr bool operator<=(const DateTime& other) const
-        {
-            return _ticks <= other._ticks;
-        }
-
-        constexpr bool operator>(const DateTime& other) const
-        {
-            return _ticks > other._ticks;
-        }
-
-        constexpr bool operator>=(const DateTime& other) const
-        {
-            return _ticks >= other._ticks;
-        }
-
-        constexpr DateTime operator+(const TimeSpan& timeSpan) const
-        {
-            return DateTime(_ticks + timeSpan.Ticks());
-        }
-
-        constexpr DateTime operator-(const TimeSpan& timeSpan) const
-        {
-            return DateTime(_ticks - timeSpan.Ticks());
-        }
-
-        constexpr TimeSpan operator-(const DateTime& other) const
-        {
-            return TimeSpan(_ticks - other._ticks);
-        }
-
-        constexpr const TimeSpan TimeOfDay() const
+        constexpr TimeSpan TimeOfDay() const
         {
             return TimeSpan(_ticks % TicksPerDay);
         }
@@ -133,8 +88,8 @@ namespace Kelly
         static int DaysInMonth(int month, int year = 1);
 
         static const char* DayToString(int dayOfWeek);
-        static const DateTime LocalTime();
-        static const DateTime UtcTime();
+        static DateTime LocalTime();
+        static DateTime UtcTime();
 
         static constexpr bool IsLeapYear(int year)
         {
@@ -157,10 +112,55 @@ namespace Kelly
         }
     };
 
+    constexpr bool operator==(DateTime a, DateTime b)
+    {
+        return a.Ticks() == b.Ticks();
+    }
+
+    constexpr bool operator!=(DateTime a, DateTime b)
+    {
+        return a.Ticks() != b.Ticks();
+    }
+
+    constexpr bool operator<(DateTime a, DateTime b)
+    {
+        return a.Ticks() < b.Ticks();
+    }
+
+    constexpr bool operator<=(DateTime a, DateTime b)
+    {
+        return a.Ticks() <= b.Ticks();
+    }
+
+    constexpr bool operator>(DateTime a, DateTime b)
+    {
+        return a.Ticks() > b.Ticks();
+    }
+
+    constexpr bool operator>=(DateTime a, DateTime b)
+    {
+        return a.Ticks() >= b.Ticks();
+    }
+
+    constexpr DateTime operator+(DateTime a, TimeSpan b)
+    {
+        return DateTime(a.Ticks() + b.Ticks());
+    }
+
+    constexpr DateTime operator-(DateTime a, TimeSpan b)
+    {
+        return DateTime(a.Ticks() - b.Ticks());
+    }
+
+    constexpr TimeSpan operator-(DateTime a, DateTime b)
+    {
+        return TimeSpan(a.Ticks() - b.Ticks());
+    }
+
     template<typename CharT, typename TraitsT>
     std::basic_ostream<CharT, TraitsT>& operator<<(
         std::basic_ostream<CharT, TraitsT>& stream,
-        const DateTime& dateTime)
+        DateTime dateTime)
     {
         stream
             << dateTime.Year()

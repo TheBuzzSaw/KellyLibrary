@@ -12,7 +12,7 @@ namespace Kelly
     static constexpr int64_t DaysPerCentury = DaysPerYear * 100 + 24;
     static constexpr int64_t DaysPerFourYears = DaysPerYear * 4 + 1;
 
-    static int64_t ExtractYears(int64_t& days)
+    std::pair<int, int> ExtractYears(int days)
     {
         int64_t year = 1;
 
@@ -46,10 +46,10 @@ namespace Kelly
             days -= chunks * DaysPerYear;
         }
 
-        return year;
+        return {year, days};
     }
 
-    static int64_t ExtractMonth(int64_t& days, int year)
+    std::pair<int, int> ExtractMonth(int days, int year)
     {
         int64_t month = 1;
 
@@ -61,7 +61,7 @@ namespace Kelly
             days -= daysInMonth;
         }
 
-        return month;
+        return {month, days};
     }
 
     DateTime::DateTime(
@@ -113,32 +113,32 @@ namespace Kelly
 
     int DateTime::Year() const
     {
-        int64_t days = _ticks / TicksPerDay;
-        return ExtractYears(days);
+        int days = _ticks / TicksPerDay;
+        return ExtractYears(days).first;
     }
 
     int DateTime::Month() const
     {
-        int64_t days = _ticks / TicksPerDay;
-        int64_t year = ExtractYears(days);
-        return ExtractMonth(days, year);
+        int days = _ticks / TicksPerDay;
+        auto y = ExtractYears(days);
+        return ExtractMonth(y.second, y.first).first;
     }
 
     int DateTime::Day() const
     {
         int64_t days = _ticks / TicksPerDay;
-        int64_t year = ExtractYears(days);
-        ExtractMonth(days, year);
-        return days + 1;
+        auto y = ExtractYears(days);
+        auto m = ExtractMonth(y.second, y.first);
+        return m.second + 1;
     }
 
-    DateTime& DateTime::operator+=(const TimeSpan& timeSpan)
+    DateTime& DateTime::operator+=(TimeSpan timeSpan)
     {
         _ticks = SafeTicks(_ticks += timeSpan.Ticks());
         return *this;
     }
 
-    DateTime& DateTime::operator-=(const TimeSpan& timeSpan)
+    DateTime& DateTime::operator-=(TimeSpan timeSpan)
     {
         _ticks = SafeTicks(_ticks -= timeSpan.Ticks());
         return *this;
@@ -146,39 +146,32 @@ namespace Kelly
 
     int DateTime::DaysInMonth(int month, int year)
     {
-        int days = 0;
-
         if (InRange(month, 1, 12))
         {
-            days = DaysInMonths[month];
-
             if (month == 2 && IsLeapYear(year))
-                days = 29;
+                return 29;
+
+            return DaysInMonths[month];
         }
 
-        return days;
+        return 0;
     }
 
     const char* DateTime::DayToString(int dayOfWeek)
     {
-        const char* dayName = "invalid day";
+        const char* DayNames[7] = {
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"};
 
-        switch (dayOfWeek)
-        {
-            case 0: dayName = "Monday"; break;
-            case 1: dayName = "Tuesday"; break;
-            case 2: dayName = "Wednesday"; break;
-            case 3: dayName = "Thursday"; break;
-            case 4: dayName = "Friday"; break;
-            case 5: dayName = "Saturday"; break;
-            case 6: dayName = "Sunday"; break;
-            default: break;
-        }
-
-        return dayName;
+        return InRange(dayOfWeek, 0, 6) ? DayNames[dayOfWeek] : nullptr;
     }
 
-    static const DateTime GetDateTime(const tm& timeInfo)
+    static DateTime GetDateTime(const tm& timeInfo)
     {
         return DateTime(
             timeInfo.tm_year + 1900,
@@ -191,14 +184,14 @@ namespace Kelly
         // http://www.cplusplus.com/reference/clibrary/ctime/tm/
     }
 
-    const DateTime DateTime::LocalTime()
+    DateTime DateTime::LocalTime()
     {
         time_t rawTime;
         time(&rawTime);
         return GetDateTime(*localtime(&rawTime));
     }
 
-    const DateTime DateTime::UtcTime()
+    DateTime DateTime::UtcTime()
     {
         time_t rawTime;
         time(&rawTime);
