@@ -24,7 +24,7 @@ namespace Kelly
 
         explicit Matrix4x4(const T* values)
         {
-            memcpy(_values, values, sizeof(T) * 16);
+            memcpy(_values, values, sizeof(_values));
         }
 
         Matrix4x4(const Matrix4x4<T>&) = default;

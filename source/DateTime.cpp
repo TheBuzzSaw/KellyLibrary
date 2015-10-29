@@ -7,7 +7,6 @@ namespace Kelly
         { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     static constexpr int DaysPerYear = 365;
-    static constexpr int TicksPerYear = TicksPerDay * DaysPerYear;
     static constexpr int DaysPerFourCenturies = DaysPerYear * 400 + 97;
     static constexpr int DaysPerCentury = DaysPerYear * 100 + 24;
     static constexpr int DaysPerFourYears = DaysPerYear * 4 + 1;
