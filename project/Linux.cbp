@@ -61,7 +61,9 @@
 		<Unit filename="../include/Stopwatch.hpp" />
 		<Unit filename="../include/StructureOfArrays.hpp" />
 		<Unit filename="../include/TimeSpan.hpp" />
+		<Unit filename="../include/Token.hpp" />
 		<Unit filename="../include/Tools.hpp" />
+		<Unit filename="../include/Utf8CodePoint.hpp" />
 		<Unit filename="../include/View.hpp" />
 		<Unit filename="../source/CString.cpp" />
 		<Unit filename="../source/DateTime.cpp" />
@@ -75,7 +77,9 @@
 		<Unit filename="../source/TcpListener.cpp" />
 		<Unit filename="../source/TcpSocket.cpp" />
 		<Unit filename="../source/TimeSpan.cpp" />
+		<Unit filename="../source/Token.cpp" />
 		<Unit filename="../source/UNIX/Clock.cpp" />
+		<Unit filename="../source/Utf8CodePoint.cpp" />
 		<Unit filename="../source/main.cpp" />
 		<Extensions>
 			<envvars />

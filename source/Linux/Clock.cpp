@@ -13,7 +13,7 @@ namespace Kelly
 #endif
         ;
 
-    const DateTime GetNativeTime()
+    DateTime GetNativeTime()
     {
         timespec ts;
         clock_gettime(CLOCK_REALTIME, &ts);
