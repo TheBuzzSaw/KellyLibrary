@@ -24,6 +24,8 @@ namespace Kelly
         int parseResult;
     };
 
+    Utf8ParseResult ParseUtf8CodePoint(const char* text);
+
     constexpr bool operator==(Utf8CodePoint a, Utf8CodePoint b)
     {
         return a.value == b.value;

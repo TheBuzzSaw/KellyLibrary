@@ -38,7 +38,7 @@ namespace Kelly
 
             char32_t c = GetUtf32CodePoint(result.codePoint);
 
-            if (InRange(c, 'a', 'z')) ;
+            if (InRange<char32_t>(c, 'a', 'z')) ;
         }
 
         return tokens;
