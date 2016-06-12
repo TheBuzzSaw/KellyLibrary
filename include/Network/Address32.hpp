@@ -22,8 +22,8 @@ namespace Kelly
         return a.networkValue != b.networkValue;
     }
 
-    constexpr Address32 NullAddress32 = { 0, 0, 0, 0 };
-    constexpr Address32 LocalHost32 = { 127, 0, 0, 1 };
+    constexpr Address32 NullAddress32 = {{0, 0, 0, 0}};
+    constexpr Address32 LocalHost32 = {{127, 0, 0, 1 }};
 
     template<typename CharT, typename TraitsT>
     std::basic_ostream<CharT, TraitsT>& operator<<(

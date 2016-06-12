@@ -56,13 +56,12 @@ namespace Kelly
         return a.value >= b.value;
     }
 
-    constexpr const View<char> GetView(Utf8CodePoint& codePoint)
+    inline View<char> GetView(Utf8CodePoint& codePoint)
     {
         return { reinterpret_cast<char*>(codePoint.chars), 4 };
     }
 
-    constexpr const View<const char> GetConstView(
-        const Utf8CodePoint& codePoint)
+    inline View<const char> GetConstView(const Utf8CodePoint& codePoint)
     {
         return { reinterpret_cast<const char*>(codePoint.chars), 4 };
     }

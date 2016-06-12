@@ -40,7 +40,7 @@ namespace Kelly
         other._newPageByteCount = DefaultNewPageByteCount;
     }
 
-    Region::~Region()
+    Region::~Region() noexcept
     {
         Release();
     }

@@ -21,7 +21,7 @@ namespace Kelly
         return a.address != b.address || a.port != b.port;
     }
 
-    constexpr Endpoint32 NullEndpoint32 = {{0,0,0,0},0};
+    constexpr Endpoint32 NullEndpoint32 = {{{0,0,0,0}},0};
 
     template<typename CharT, typename TraitsT>
     std::basic_ostream<CharT, TraitsT>& operator<<(
