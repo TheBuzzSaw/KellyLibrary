@@ -8,7 +8,7 @@ namespace Kelly
         return value ? strlen(value) : 0;
     }
 
-    int Compare(const CString& a, const CString& b)
+    int Compare(CString a, CString b)
     {
         bool hasContent = a.HasContent();
         int result = hasContent - b.HasContent();
@@ -16,32 +16,32 @@ namespace Kelly
         return result;
     }
 
-    bool operator==(const CString& a, const CString& b)
+    bool operator==(CString a, CString b)
     {
         return !Compare(a, b);
     }
 
-    bool operator!=(const CString& a, const CString& b)
+    bool operator!=(CString a, CString b)
     {
         return Compare(a, b);
     }
 
-    bool operator<(const CString& a, const CString& b)
+    bool operator<(CString a, CString b)
     {
         return Compare(a, b) < 0;
     }
 
-    bool operator>(const CString& a, const CString& b)
+    bool operator>(CString a, CString b)
     {
         return Compare(a, b) > 0;
     }
 
-    bool operator<=(const CString& a, const CString& b)
+    bool operator<=(CString a, CString b)
     {
         return Compare(a, b) <= 0;
     }
 
-    bool operator>=(const CString& a, const CString& b)
+    bool operator>=(CString a, CString b)
     {
         return Compare(a, b) >= 0;
     }

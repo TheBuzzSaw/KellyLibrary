@@ -47,7 +47,6 @@
 		<Unit filename="../include/FileTools.hpp" />
 		<Unit filename="../include/LoudMouth.hpp" />
 		<Unit filename="../include/Math.hpp" />
-		<Unit filename="../include/Matrix.hpp" />
 		<Unit filename="../include/Matrix4x4.hpp" />
 		<Unit filename="../include/Network/Address32.hpp" />
 		<Unit filename="../include/Network/Endpoint32.hpp" />

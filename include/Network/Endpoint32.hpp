@@ -11,12 +11,12 @@ namespace Kelly
         uint16_t port;
     };
 
-    constexpr bool operator==(const Endpoint32& a, const Endpoint32& b)
+    constexpr bool operator==(Endpoint32 a, Endpoint32 b)
     {
         return a.address == b.address && a.port == b.port;
     }
 
-    constexpr bool operator!=(const Endpoint32& a, const Endpoint32& b)
+    constexpr bool operator!=(Endpoint32 a, Endpoint32 b)
     {
         return a.address != b.address || a.port != b.port;
     }

@@ -31,27 +31,27 @@ namespace Kelly
         ptrdiff_t Length() const;
     };
 
-    constexpr CString operator+(const CString& cs, ptrdiff_t n)
+    constexpr CString operator+(CString cs, ptrdiff_t n)
     {
         return cs.value + n;
     }
 
-    constexpr CString operator-(const CString& cs, ptrdiff_t n)
+    constexpr CString operator-(CString cs, ptrdiff_t n)
     {
         return cs.value - n;
     }
 
-    int Compare(const CString& a, const CString& b);
-    bool operator==(const CString& a, const CString& b);
-    bool operator!=(const CString& a, const CString& b);
-    bool operator<(const CString& a, const CString& b);
-    bool operator>(const CString& a, const CString& b);
-    bool operator<=(const CString& a, const CString& b);
-    bool operator>=(const CString& a, const CString& b);
+    int Compare(CString a, CString b);
+    bool operator==(CString a, CString b);
+    bool operator!=(CString a, CString b);
+    bool operator<(CString a, CString b);
+    bool operator>(CString a, CString b);
+    bool operator<=(CString a, CString b);
+    bool operator>=(CString a, CString b);
 
     inline std::ostream& operator<<(
         std::ostream& stream,
-        const CString& cstring)
+        CString cstring)
     {
         if (cstring.value) stream << cstring.value;
         return stream;
